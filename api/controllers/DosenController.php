@@ -75,6 +75,50 @@ class DosenController {
         Response::success(['id' => $this->db->lastInsertId()], 'Dosen berhasil ditambahkan.', 201);
     }
 
+    public function import(): void {
+        $p = AuthMiddleware::validate();
+        AuthMiddleware::requireRole($p, 'ADMIN');
+
+        $d = json_decode(file_get_contents('php://input'), true) ?? [];
+        $items = $d['items'] ?? [];
+        if (!is_array($items)) Response::error('Format import tidak valid.', 422);
+
+        $result = ['imported' => 0, 'skipped' => 0, 'errors' => []];
+        $insertStmt = $this->db->prepare(
+            "INSERT INTO dosen (nip,nama,email,telepon,alamat) VALUES (?,?,?,?,?)"
+        );
+
+        foreach ($items as $index => $item) {
+            $rowNumber = $index + 1;
+            $nip     = trim($item['nip'] ?? '');
+            $nama    = trim($item['nama'] ?? '');
+            $email   = trim($item['email'] ?? '');
+            $telepon = trim($item['telepon'] ?? '');
+            $alamat  = trim($item['alamat'] ?? '');
+
+            if (!$nip || !$nama) {
+                $result['errors'][] = "Baris {$rowNumber}: NIP dan Nama wajib diisi.";
+                continue;
+            }
+
+            $chk = $this->db->prepare("SELECT id FROM dosen WHERE nip = ?");
+            $chk->execute([$nip]);
+            if ($chk->fetch()) {
+                $result['skipped']++;
+                continue;
+            }
+
+            try {
+                $insertStmt->execute([$nip,$nama,$email,$telepon,$alamat]);
+                $result['imported']++;
+            } catch (Throwable $e) {
+                $result['errors'][] = "Baris {$rowNumber}: Gagal menambahkan dosen ({$e->getMessage()}).";
+            }
+        }
+
+        Response::success($result, 'Import dosen selesai.');
+    }
+
     public function update(string $id): void {
         $p = AuthMiddleware::validate();
         AuthMiddleware::requireRole($p, 'ADMIN');

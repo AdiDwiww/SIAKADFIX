@@ -44,6 +44,7 @@ switch ($resource) {
         match(true) {
             $method === 'GET'    && !$param1                       => $c->index(),
             $method === 'POST'   && !$param1                       => $c->store(),
+            $method === 'POST'   && $param1 === 'import'         => $c->import(),
             $method === 'GET'    && is_numeric($param1)            => $c->show($param1),
             $method === 'POST'   && is_numeric($param1)            => $c->update($param1),
             $method === 'DELETE' && $param1 === 'bulk-delete'      => $c->bulkDestroy(),
@@ -59,6 +60,7 @@ switch ($resource) {
         match(true) {
             $method === 'GET'    && !$param1                 => $c->index(),
             $method === 'POST'   && !$param1                 => $c->store(),
+            $method === 'POST'   && $param1 === 'import'    => $c->import(),
             $method === 'GET'    && is_numeric($param1)      => $c->show($param1),
             $method === 'POST'   && is_numeric($param1)      => $c->update($param1),
             $method === 'DELETE' && $param1 === 'bulk-delete'=> $c->bulkDestroy(),
