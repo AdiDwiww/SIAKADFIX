@@ -31,10 +31,15 @@
                     <span><span
                             style="display:inline-block;width:18px;vertical-align:middle;margin-right:6px">${ICON.book}</span>
                         Daftar Mata Kuliah</span>
-                    <button class="btn btn-primary btn-sm" id="btn-tambah" onclick="openAdd()"><span
-                            style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.plus}</span>
-                        Tambah Mata
-                        Kuliah</button>
+                    <div class="button-group">
+                        <button class="btn btn-secondary btn-sm" id="btn-import" onclick="openImport()"><span
+                                style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.plus}</span>
+                            Impor Excel</button>
+                        <button class="btn btn-primary btn-sm" id="btn-tambah" onclick="openAdd()"><span
+                                style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.plus}</span>
+                            Tambah Mata
+                            Kuliah</button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-toolbar">
@@ -114,6 +119,41 @@
         </div>
     </div>
 
+    <!-- Modal Import -->
+    <div class="modal-overlay hidden" id="modal-import">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><span
+                        style="display:inline-block;width:20px;vertical-align:middle;margin-right:6px">${ICON.plus}</span>
+                    Impor Mata Kuliah</h2>
+                <button class="btn-modal-close" onclick="closeModal('modal-import')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-import">
+                    <div class="form-group">
+                        <label class="form-label">Pilih file Excel / CSV <span class="required">*</span></label>
+                        <input type="file" id="f-file" class="form-control" accept=".xlsx,.xls,.csv" required>
+                        <small class="form-help">Gunakan kolom: Kode MK, Nama Mata Kuliah, SKS, Semester, Dosen (ID/NIP).</small>
+                    </div>
+                    <div class="form-group">
+                        <div class="alert alert-info" style="display:flex;align-items:flex-start;gap:8px;">
+                            <span>${ICON.info}</span>
+                            <div>
+                                Jika menggunakan Excel, simpan file sebagai CSV bila import xlsx gagal. Baris duplikat kode MK akan dilewati.
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-import')">Batal</button>
+                <button class="btn btn-primary" id="btn-import-submit" onclick="submitImport()"><span
+                        style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.save}</span>
+                    Proses Import</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Detail -->
     <div class="modal-overlay hidden" id="modal-detail">
         <div class="modal modal-sm">
@@ -132,6 +172,7 @@
 
     <script src="../assets/js/icons.js"></script>
     <script src="../assets/js/api.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha512-4cV+REg+K7U+S8J6UrnC9V0uexX8KJANXfwltB8/eO75HoPm3lQ7G6PUqQnY+3ZyK1YvQv6zsGuil8BJ1M9BbA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/layout.js"></script>
     <script src="../assets/js/notifications.js"></script>
@@ -140,7 +181,10 @@
         Auth.requireRole(['ADMIN', 'DOSEN', 'MAHASISWA']);
         const user = Auth.getUser();
         const isAdmin = user?.role === 'ADMIN';
-        if (!isAdmin) document.getElementById('btn-tambah').style.display = 'none';
+        if (!isAdmin) {
+            document.getElementById('btn-tambah').style.display = 'none';
+            document.getElementById('btn-import').style.display = 'none';
+        }
 
         let currentPage = 1, totalPages = 1, searchTimer;
         let dosenList = [];
@@ -267,6 +311,163 @@
                 closeModal('modal-form'); load(id ? currentPage : 1);
             } else Toast.error(res.message);
             btn.disabled = false; btn.innerHTML = `${ICON.save} Simpan`;
+        }
+
+        function openImport() {
+            document.getElementById('form-import').reset();
+            document.getElementById('btn-import-submit').disabled = false;
+            document.getElementById('btn-import-submit').innerHTML = `${ICON.save} Proses Import`;
+            openModal('modal-import');
+        }
+
+        async function submitImport() {
+            const btn = document.getElementById('btn-import-submit');
+            const fileEl = document.getElementById('f-file');
+            const file = fileEl.files[0];
+            if (!file) {
+                Toast.error('Pilih file Excel atau CSV terlebih dahulu.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Memproses...';
+
+            try {
+                const rows = await parseImportFile(file);
+                const { items, errors } = buildImportItems(rows);
+                if (errors.length) {
+                    Toast.error('Beberapa baris tidak valid. Periksa file dan coba lagi.');
+                    console.warn('Import errors:', errors.join('\n'));
+                }
+                if (!items.length) {
+                    Toast.error('Tidak ada data valid untuk diimpor.');
+                    btn.disabled = false;
+                    btn.innerHTML = `${ICON.save} Proses Import`;
+                    return;
+                }
+
+                const res = await API.post('/kuliah/import', { items });
+                if (res.ok) {
+                    const summary = res.data;
+                    let msg = `${summary.imported} mata kuliah berhasil diimpor.`;
+                    if (summary.skipped) msg += ` ${summary.skipped} duplikat dilewati.`;
+                    if (summary.errors?.length) msg += ` ${summary.errors.length} baris gagal.`;
+                    Toast.success(msg, 'Import Selesai');
+                    if (summary.errors?.length) console.warn('Import server errors:', summary.errors.join('\n'));
+                    closeModal('modal-import');
+                    load(1);
+                } else {
+                    Toast.error(res.message);
+                }
+            } catch (err) {
+                console.error(err);
+                Toast.error('Gagal memproses file. Pastikan format Excel/CSV sesuai.');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = `${ICON.save} Proses Import`;
+        }
+
+        function parseImportFile(file) {
+            return new Promise((resolve, reject) => {
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (ext === 'csv') {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(parseCsvRows(reader.result));
+                    reader.onerror = () => reject(reader.error);
+                    reader.readAsText(file, 'UTF-8');
+                } else {
+                    if (!window.XLSX) {
+                        reject(new Error('Library XLSX tidak tersedia. Gunakan CSV sebagai alternatif.'));
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        try {
+                            const data = new Uint8Array(reader.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+                            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+                            resolve(rows);
+                        } catch (e) {
+                            reject(e);
+                        }
+                    };
+                    reader.onerror = () => reject(reader.error);
+                    reader.readAsArrayBuffer(file);
+                }
+            });
+        }
+
+        function parseCsvRows(text) {
+            const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+            return lines.map(line => {
+                const result = [];
+                let cell = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const c = line[i];
+                    if (c === '"') {
+                        if (inQuotes && line[i + 1] === '"') {
+                            cell += '"';
+                            i++;
+                        } else {
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (c === ',' && !inQuotes) {
+                        result.push(cell);
+                        cell = '';
+                    } else {
+                        cell += c;
+                    }
+                }
+                result.push(cell);
+                return result;
+            }).filter(row => row.some(cell => cell.toString().trim() !== ''));
+        }
+
+        function buildImportItems(rows) {
+            const items = [];
+            const errors = [];
+            const headers = rows[0]?.map(h => h.toString().trim().toLowerCase()) || [];
+            const hasHeader = headers.some(h => ['kode', 'kode mk', 'kode_mk', 'nama', 'nama mk', 'nama_mk'].includes(h));
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i].map(c => c == null ? '' : c.toString().trim());
+                if (row.every(cell => cell === '')) continue;
+                if (i === 0 && hasHeader) continue;
+
+                const record = {};
+                if (hasHeader) {
+                    for (let j = 0; j < row.length; j++) {
+                        const key = headers[j] || `col${j}`;
+                        record[key] = row[j];
+                    }
+                } else {
+                    record.kode = row[0] || '';
+                    record.nama = row[1] || '';
+                    record.sks = row[2] || '';
+                    record.semester = row[3] || '';
+                    record.dosen = row[4] || '';
+                }
+
+                const kode = record.kode_mk || record.kode || '';
+                const nama = record.nama_mk || record.nama || '';
+                if (!kode || !nama) {
+                    errors.push(`Baris ${i + 1}: Kode MK dan Nama MK wajib diisi.`);
+                    continue;
+                }
+
+                items.push({
+                    kode_mk: kode,
+                    nama_mk: nama,
+                    sks: parseInt(record.sks || '2', 10) || 2,
+                    semester: parseInt(record.semester || '0', 10) || null,
+                    dosen_id: record.dosen_id || record.dosen || record.dosen_nip || record.nip || '',
+                });
+            }
+
+            return { items, errors };
         }
 
         function hapus(id, nama) {
