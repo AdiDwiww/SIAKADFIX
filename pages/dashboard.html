@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard – SIA Akademik</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content" id="main-content">
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="btn-menu-toggle" id="btn-menu-toggle" onclick="Layout.toggleSidebar()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <span id="page-title" class="page-title">Dashboard</span>
+            </div>
+            <div class="topbar-right">
+                <span id="topbar-user" class="topbar-user"></span>
+            </div>
+        </div>
+
+        <div class="page-content">
+
+            <!-- Stats -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue" style="padding:16px" data-icon="users"></div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total Mahasiswa</div>
+                        <div class="stat-value" id="s-mhs">–</div>
+                        <div class="stat-sub">Mahasiswa terdaftar</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green" style="padding:16px" data-icon="user"></div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total Dosen</div>
+                        <div class="stat-value" id="s-dsn">–</div>
+                        <div class="stat-sub">Dosen aktif</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon amber" style="padding:16px" data-icon="book"></div>
+                    <div class="stat-info">
+                        <div class="stat-label">Mata Kuliah</div>
+                        <div class="stat-value" id="s-mk">–</div>
+                        <div class="stat-sub">Mata kuliah tersedia</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Latest tables -->
+            <div class="dashboard-grid">
+                <!-- Mahasiswa Terbaru -->
+                <div class="card">
+                    <div class="card-header"><span
+                            style="display:inline-block;width:18px;vertical-align:middle;margin-right:6px"
+                            data-icon="users"></span> Mahasiswa Terbaru</div>
+                    <div class="card-body" style="padding:0">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>NIM</th>
+                                    <th>Nama</th>
+                                    <th>Jurusan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl-mhs">
+                                <tr>
+                                    <td colspan="3" class="empty-state">
+                                        <p>Memuat...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="padding:12px 16px;border-top:1px solid var(--border)">
+                        <a href="mahasiswa.html" class="btn btn-secondary btn-sm">Lihat Semua →</a>
+                    </div>
+                </div>
+                <!-- Dosen Terbaru -->
+                <div class="card">
+                    <div class="card-header"><span
+                            style="display:inline-block;width:18px;vertical-align:middle;margin-right:6px"
+                            data-icon="user"></span> Dosen Terbaru</div>
+                    <div class="card-body" style="padding:0">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>NIP</th>
+                                    <th>Nama</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl-dsn">
+                                <tr>
+                                    <td colspan="2" class="empty-state">
+                                        <p>Memuat...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="padding:12px 16px;border-top:1px solid var(--border)">
+                        <a href="dosen.html" class="btn btn-secondary btn-sm">Lihat Semua →</a>
+                    </div>
+                </div>
+                <!-- Mata Kuliah Terbaru -->
+                <div class="card">
+                    <div class="card-header"><span
+                            style="display:inline-block;width:18px;vertical-align:middle;margin-right:6px"
+                            data-icon="book"></span> Mata Kuliah Terbaru</div>
+                    <div class="card-body" style="padding:0">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kode</th>
+                                    <th>Nama MK</th>
+                                    <th>Dosen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl-mk">
+                                <tr>
+                                    <td colspan="3" class="empty-state">
+                                        <p>Memuat...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="padding:12px 16px;border-top:1px solid var(--border)">
+                        <a href="kuliah.html" class="btn btn-secondary btn-sm">Lihat Semua →</a>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /page-content -->
+    </div><!-- /main-content -->
+
+    <script src="../assets/js/icons.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script>
+        Layout.init('Dashboard');
+
+        async function loadDashboard() {
+            const res = await API.get('/dashboard');
+            if (!res.ok) { Toast.error(res.message); return; }
+            const { stats, latest_mahasiswa, latest_dosen, latest_kuliah } = res.data;
+
+            document.getElementById('s-mhs').textContent = stats.total_mahasiswa;
+            document.getElementById('s-dsn').textContent = stats.total_dosen;
+            document.getElementById('s-mk').textContent = stats.total_kuliah;
+
+            document.getElementById('tbl-mhs').innerHTML = latest_mahasiswa.length
+                ? latest_mahasiswa.map(m => `<tr><td><span class="badge badge-blue">${m.nim}</span></td><td>${m.nama}</td><td>${m.jurusan || '-'}</td></tr>`).join('')
+                : '<tr><td colspan="3" class="empty-state"><p>Belum ada data</p></td></tr>';
+
+            document.getElementById('tbl-dsn').innerHTML = latest_dosen.length
+                ? latest_dosen.map(d => `<tr><td><small>${d.nip}</small></td><td>${d.nama}</td></tr>`).join('')
+                : '<tr><td colspan="2" class="empty-state"><p>Belum ada data</p></td></tr>';
+
+            document.getElementById('tbl-mk').innerHTML = latest_kuliah.length
+                ? latest_kuliah.map(k => `<tr><td><span class="badge badge-amber">${k.kode_mk}</span></td><td>${k.nama_mk}</td><td>${k.nama_dosen || '-'}</td></tr>`).join('')
+                : '<tr><td colspan="3" class="empty-state"><p>Belum ada data</p></td></tr>';
+        }
+
+        loadDashboard();
+    </script>
+</body>
+
+</html>

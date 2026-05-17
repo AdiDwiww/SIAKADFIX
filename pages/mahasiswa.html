@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Mahasiswa – SIA Akademik</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content" id="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="btn-menu-toggle" onclick="Layout.toggleSidebar()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <span id="page-title" class="page-title">Data Mahasiswa</span>
+            </div>
+            <div class="topbar-right"><span id="topbar-user" class="topbar-user"></span></div>
+        </div>
+
+        <div class="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <span><span
+                            style="display:inline-block;width:18px;vertical-align:middle;margin-right:6px">${ICON.users}</span>
+                        Daftar Mahasiswa</span>
+                    <button class="btn btn-primary btn-sm" id="btn-tambah" onclick="openAdd()"><span
+                            style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.plus}</span>
+                        Tambah Mahasiswa</button>
+                </div>
+                <div class="card-body">
+
+                    <!-- Toolbar -->
+                    <div class="table-toolbar">
+                        <input type="text" id="search" class="search-input" placeholder="Cari NIM / Nama / Jurusan..."
+                            oninput="debounceSearch()">
+                        <span id="total-info" class="pagination-info"></span>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="check-all" onchange="toggleAll(this)"></th>
+                                    <th>No</th>
+                                    <th>Foto</th>
+                                    <th>NIM</th>
+                                    <th>Nama</th>
+                                    <th>Jurusan</th>
+                                    <th>Angkatan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Bottom -->
+                    <div class="pagination-wrap">
+                        <div class="pagination" id="pagination"></div>
+                    </div>
+                    <div class="table-bottom" id="admin-bottom" style="display:none">
+                        <button class="btn btn-danger btn-sm" onclick="bulkDelete()"><span
+                                style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.trash}</span>
+                            Hapus Semua Checklist</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════ MODAL ADD/EDIT ═══════════════════════ -->
+    <div class="modal-overlay hidden" id="modal-form">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-form-title">Tambah Mahasiswa</h2>
+                <button class="btn-modal-close" onclick="closeModal('modal-form')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-mahasiswa" enctype="multipart/form-data">
+                    <input type="hidden" id="f-id">
+                    <!-- Photo -->
+                    <div class="form-group" style="text-align:center">
+                        <div class="photo-preview-wrap" style="margin:0 auto 6px">
+                            <img id="f-photo-preview" class="photo-preview" src="" alt="Foto">
+                            <label for="f-foto" class="photo-change-btn" title="Ganti Foto">${ICON.edit}</label>
+                        </div>
+                        <input type="file" id="f-foto" accept="image/*" style="display:none"
+                            onchange="previewPhoto(this)">
+                        <small style="color:var(--text-muted)">Klik foto untuk ganti. Max 5 MB</small>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">NIM <span class="required">*</span></label>
+                            <input type="text" id="f-nim" class="form-control" placeholder="e.g. 2023110001" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Angkatan</label>
+                            <input type="number" id="f-angkatan" class="form-control" placeholder="e.g. 2023" min="2000"
+                                max="2099">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nama Lengkap <span class="required">*</span></label>
+                        <input type="text" id="f-nama" class="form-control" placeholder="Nama lengkap mahasiswa"
+                            required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="f-email" class="form-control" placeholder="email@mhs.ac.id">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telepon</label>
+                            <input type="text" id="f-telepon" class="form-control" placeholder="08XXXXXXXXXX">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jurusan</label>
+                        <input type="text" id="f-jurusan" class="form-control" placeholder="e.g. Teknik Informatika">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alamat</label>
+                        <textarea id="f-alamat" class="form-control" rows="2" placeholder="Alamat lengkap"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-form')">Batal</button>
+                <button class="btn btn-primary" id="btn-submit" onclick="submitForm()"><span
+                        style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.save}</span>
+                    Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════ MODAL DETAIL ═══════════════════════ -->
+    <div class="modal-overlay hidden" id="modal-detail">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><span
+                        style="display:inline-block;width:20px;vertical-align:middle;margin-right:6px">${ICON.clipboard}</span>
+                    Detail Mahasiswa</h2>
+                <button class="btn-modal-close" onclick="closeModal('modal-detail')">×</button>
+            </div>
+            <div class="modal-body" id="detail-body"></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-detail')">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/icons.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script>
+        // ─── Init ─────────────────────────────────────────────
+        Layout.init('Data Mahasiswa');
+        Auth.requireRole(['ADMIN', 'DOSEN']);
+        const user = Auth.getUser();
+        const isAdmin = user?.role === 'ADMIN';
+
+        if (isAdmin) document.getElementById('admin-bottom').style.display = 'flex';
+        else document.getElementById('btn-tambah').style.display = 'none';
+
+        let currentPage = 1, totalPages = 1, searchTimer;
+
+        // ─── Fetch & Render ───────────────────────────────────
+        async function load(page = 1) {
+            currentPage = page;
+            const search = document.getElementById('search').value;
+            const res = await API.get(`/mahasiswa?page=${page}&limit=10&search=${encodeURIComponent(search)}`);
+            if (!res.ok) { Toast.error(res.message); return; }
+
+            const { data, pagination } = res;
+            totalPages = pagination.total_pages;
+            document.getElementById('total-info').textContent =
+                `Menampilkan ${data.length} dari ${pagination.total} data`;
+
+            const tbody = document.getElementById('tbody');
+            const offset = (page - 1) * 10;
+            tbody.innerHTML = data.length ? data.map((m, i) => `
+    <tr>
+      <td><input type="checkbox" class="row-check" value="${m.id}"></td>
+      <td>${offset + i + 1}</td>
+      <td><img src="${API.photoUrl(m.foto)}" class="table-photo" alt="foto" onerror="this.src='${BASE_ROOT}/assets/img/avatar.png'"></td>
+      <td><span class="badge badge-blue">${m.nim}</span></td>
+      <td><strong>${m.nama}</strong></td>
+      <td>${m.jurusan || '-'}</td>
+      <td>${m.angkatan || '-'}</td>
+      <td class="table-actions">
+        <button class="btn-icon detail" title="Detail"  onclick="openDetail(${m.id})">${ICON.eye}</button>
+        ${isAdmin ? `<button class="btn-icon edit" title="Edit" onclick="openEdit(${m.id})">${ICON.edit}</button>
+        <button class="btn-icon del"  title="Hapus" onclick="hapus(${m.id}, '${m.nama}')">${ICON.trash}</button>` : ''}
+      </td>
+    </tr>`).join('')
+                : `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">${ICON.inbox}</div><p>Tidak ada data mahasiswa</p></div></td></tr>`;
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const el = document.getElementById('pagination');
+            let html = '';
+            const maxBtn = 5;
+            let start = Math.max(1, currentPage - 2);
+            let end = Math.min(totalPages, start + maxBtn - 1);
+            if (end - start < maxBtn - 1) start = Math.max(1, end - maxBtn + 1);
+
+            html += `<button class="page-btn" onclick="load(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+            for (let i = start; i <= end; i++)
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="load(${i})">${i}</button>`;
+            html += `<button class="page-btn" onclick="load(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+            el.innerHTML = html;
+        }
+
+        function debounceSearch() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => load(1), 400);
+        }
+
+        // ─── Modals ───────────────────────────────────────────
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function resetForm() {
+            document.getElementById('form-mahasiswa').reset();
+            document.getElementById('f-id').value = '';
+            document.getElementById('f-photo-preview').src = API.photoUrl(null);
+        }
+
+        function previewPhoto(input) {
+            if (input.files?.[0]) {
+                const reader = new FileReader();
+                reader.onload = e => document.getElementById('f-photo-preview').src = e.target.result;
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function openAdd() {
+            resetForm();
+            document.getElementById('modal-form-title').innerHTML = `<span style="display:inline-block;width:20px;vertical-align:middle;margin-right:6px">${ICON.plus}</span> Tambah Mahasiswa`;
+            openModal('modal-form');
+        }
+
+        async function openEdit(id) {
+            const res = await API.get('/mahasiswa/' + id);
+            if (!res.ok) { Toast.error(res.message); return; }
+            const m = res.data;
+            document.getElementById('modal-form-title').innerHTML = `<span style="display:inline-block;width:20px;vertical-align:middle;margin-right:6px">${ICON.edit}</span> Edit Mahasiswa`;
+            document.getElementById('f-id').value = m.id;
+            document.getElementById('f-nim').value = m.nim;
+            document.getElementById('f-nama').value = m.nama;
+            document.getElementById('f-email').value = m.email || '';
+            document.getElementById('f-telepon').value = m.telepon || '';
+            document.getElementById('f-jurusan').value = m.jurusan || '';
+            document.getElementById('f-angkatan').value = m.angkatan || '';
+            document.getElementById('f-alamat').value = m.alamat || '';
+            document.getElementById('f-photo-preview').src = API.photoUrl(m.foto);
+            openModal('modal-form');
+        }
+
+        async function openDetail(id) {
+            const res = await API.get('/mahasiswa/' + id);
+            if (!res.ok) { Toast.error(res.message); return; }
+            const m = res.data;
+            document.getElementById('detail-body').innerHTML = `
+    <div class="detail-header">
+      <img src="${API.photoUrl(m.foto)}" class="detail-avatar" onerror="this.src='${BASE_ROOT}/assets/img/avatar.png'">
+      <div><div class="detail-name">${m.nama}</div><div class="detail-sub">${m.nim} · ${m.jurusan || '-'}</div></div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="di-label">NIM</div><div class="di-value">${m.nim}</div></div>
+      <div class="detail-item"><div class="di-label">Angkatan</div><div class="di-value">${m.angkatan || '-'}</div></div>
+      <div class="detail-item"><div class="di-label">Email</div><div class="di-value">${m.email || '-'}</div></div>
+      <div class="detail-item"><div class="di-label">Telepon</div><div class="di-value">${m.telepon || '-'}</div></div>
+      <div class="detail-item" style="grid-column:span 2"><div class="di-label">Alamat</div><div class="di-value">${m.alamat || '-'}</div></div>
+      <div class="detail-item"><div class="di-label">Terdaftar</div><div class="di-value">${new Date(m.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</div></div>
+    </div>`;
+            openModal('modal-detail');
+        }
+
+        // ─── CRUD ─────────────────────────────────────────────
+        async function submitForm() {
+            const btn = document.getElementById('btn-submit');
+            btn.disabled = true; btn.textContent = 'Menyimpan...';
+
+            const id = document.getElementById('f-id').value;
+            const fd = new FormData();
+            fd.append('nim', document.getElementById('f-nim').value);
+            fd.append('nama', document.getElementById('f-nama').value);
+            fd.append('email', document.getElementById('f-email').value);
+            fd.append('telepon', document.getElementById('f-telepon').value);
+            fd.append('jurusan', document.getElementById('f-jurusan').value);
+            fd.append('angkatan', document.getElementById('f-angkatan').value);
+            fd.append('alamat', document.getElementById('f-alamat').value);
+            const fotoFile = document.getElementById('f-foto').files[0];
+            if (fotoFile) fd.append('foto', fotoFile);
+
+            const endpoint = id ? `/mahasiswa/${id}` : '/mahasiswa';
+            const res = await API.post(endpoint, fd, true);
+
+            if (res.ok) {
+                Toast.success(res.message, id ? 'Data Diperbarui' : 'Data Ditambahkan');
+                closeModal('modal-form');
+                load(id ? currentPage : 1);
+            } else {
+                Toast.error(res.message);
+            }
+            btn.disabled = false; btn.innerHTML = `${ICON.save} Simpan`;
+        }
+
+        function hapus(id, nama) {
+            Confirm.show(`Apakah Anda yakin ingin menghapus data <strong>${nama}</strong>?`, async () => {
+                const res = await API.delete('/mahasiswa/' + id);
+                if (res.ok) { Toast.success(res.message, 'Berhasil Dihapus'); load(currentPage); }
+                else Toast.error(res.message);
+            });
+        }
+
+        function toggleAll(cb) {
+            document.querySelectorAll('.row-check').forEach(c => c.checked = cb.checked);
+        }
+
+        function bulkDelete() {
+            const ids = [...document.querySelectorAll('.row-check:checked')].map(c => +c.value);
+            if (!ids.length) { Toast.warning('Tidak ada data yang dipilih.'); return; }
+            Confirm.show(`Hapus <strong>${ids.length}</strong> mahasiswa yang dipilih?`, async () => {
+                const res = await API.delete('/mahasiswa/bulk-delete', { ids });
+                if (res.ok) { Toast.success(res.message, 'Berhasil'); load(1); }
+                else Toast.error(res.message);
+            });
+        }
+
+        // ─── Start ────────────────────────────────────────────
+        load();
+    </script>
+</body>
+
+</html>

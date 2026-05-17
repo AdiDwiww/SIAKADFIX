@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register – SIA Akademik</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card" style="max-width:480px">
+            <div class="auth-logo">
+                <div class="logo-icon" data-icon="clipboard"></div>
+                <h1>Buat Akun</h1>
+                <p>Daftarkan akun SIA Akademik Anda</p>
+            </div>
+
+            <form id="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Username <span class="required">*</span></label>
+                        <input type="text" id="username" class="form-control" placeholder="username" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role <span class="required">*</span></label>
+                        <select id="role" class="form-control">
+                            <option value="MAHASISWA">Mahasiswa</option>
+                            <option value="DOSEN">Dosen</option>
+                            <option value="ADMIN">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email <span class="required">*</span></label>
+                    <input type="email" id="email" class="form-control" placeholder="email@contoh.ac.id" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Password <span class="required">*</span></label>
+                        <input type="password" id="password" class="form-control" placeholder="Min. 6 karakter"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Konfirmasi Password <span class="required">*</span></label>
+                        <input type="password" id="confirm" class="form-control" placeholder="Ulangi password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-reg"><span
+                        style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px"
+                        data-icon="checkCircle"></span> Daftar</button>
+            </form>
+
+            <div class="auth-footer">
+                Sudah punya akun? <a href="login.html">Masuk di sini</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/icons.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script>
+        Auth.requireGuest();
+
+        document.getElementById('register-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const pw = document.getElementById('password').value;
+            const cf = document.getElementById('confirm').value;
+            if (pw !== cf) { Toast.error('Konfirmasi password tidak cocok.'); return; }
+
+            const btn = document.getElementById('btn-reg');
+            btn.disabled = true; btn.textContent = 'Mendaftar...';
+
+            const res = await API.post('/auth/register', {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: pw,
+                role: document.getElementById('role').value,
+            });
+
+            if (res.ok) {
+                Toast.success(res.message, 'Registrasi Berhasil');
+                setTimeout(() => window.location.href = 'login.html', 1000);
+            } else {
+                Toast.error(res.message, 'Registrasi Gagal');
+                btn.disabled = false; btn.innerHTML = `<span style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.checkCircle}</span> Daftar`;
+            }
+        });
+    </script>
+</body>
+
+</html>

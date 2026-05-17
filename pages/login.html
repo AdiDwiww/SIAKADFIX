@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login – SIA Akademik</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="logo-icon" data-icon="award"></div>
+                <h1>SIA Akademik</h1>
+                <p>Sistem Informasi Akademik – PSI UAS</p>
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label">Username <span class="required">*</span></label>
+                    <input type="text" id="username" class="form-control" placeholder="Masukkan username" required
+                        autofocus>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password <span class="required">*</span></label>
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-login"><span
+                        style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px"
+                        data-icon="login"></span> Masuk</button>
+            </form>
+
+            <div class="auth-footer">
+                Belum punya akun? <a href="register.html">Daftar sekarang</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/icons.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script>
+        Auth.requireGuest();
+
+        document.getElementById('login-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-login');
+            btn.disabled = true; btn.textContent = 'Memproses...';
+
+            const res = await API.post('/auth/login', {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+            });
+
+            if (res.ok) {
+                Auth.setSession(res.data.token, res.data.user);
+                Toast.success('Selamat datang, ' + res.data.user.username + '!', 'Login Berhasil');
+                setTimeout(() => window.location.href = 'dashboard.html', 800);
+            } else {
+                Toast.error(res.message, 'Login Gagal');
+                btn.disabled = false; btn.innerHTML = `<span style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.login}</span> Masuk`;
+            }
+        });
+    </script>
+</body>
+
+</html>

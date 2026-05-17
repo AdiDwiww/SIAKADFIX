@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mata Kuliah – SIA Akademik</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content" id="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="btn-menu-toggle" onclick="Layout.toggleSidebar()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <span id="page-title" class="page-title">Mata Kuliah</span>
+            </div>
+            <div class="topbar-right"><span id="topbar-user" class="topbar-user"></span></div>
+        </div>
+
+        <div class="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <span><span
+                            style="display:inline-block;width:18px;vertical-align:middle;margin-right:6px">${ICON.book}</span>
+                        Daftar Mata Kuliah</span>
+                    <button class="btn btn-primary btn-sm" id="btn-tambah" onclick="openAdd()"><span
+                            style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.plus}</span>
+                        Tambah Mata
+                        Kuliah</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-toolbar">
+                        <input type="text" id="search" class="search-input" placeholder="Cari Kode / Nama MK..."
+                            oninput="debounceSearch()">
+                        <span id="total-info" class="pagination-info"></span>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Kode MK</th>
+                                    <th>Nama Mata Kuliah</th>
+                                    <th>SKS</th>
+                                    <th>Semester</th>
+                                    <th>Dosen Pengampu</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-wrap">
+                        <div class="pagination" id="pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal-overlay hidden" id="modal-form">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-form-title">Tambah Mata Kuliah</h2>
+                <button class="btn-modal-close" onclick="closeModal('modal-form')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-kuliah">
+                    <input type="hidden" id="f-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Kode MK <span class="required">*</span></label>
+                            <input type="text" id="f-kode" class="form-control" placeholder="e.g. TI-101" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">SKS <span class="required">*</span></label>
+                            <input type="number" id="f-sks" class="form-control" value="2" min="1" max="6" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nama Mata Kuliah <span class="required">*</span></label>
+                        <input type="text" id="f-nama" class="form-control" placeholder="Nama mata kuliah" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Semester</label>
+                            <input type="number" id="f-semester" class="form-control" placeholder="e.g. 3" min="1"
+                                max="14">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Dosen Pengampu</label>
+                            <select id="f-dosen" class="form-control">
+                                <option value="">– Pilih Dosen –</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-form')">Batal</button>
+                <button class="btn btn-primary" id="btn-submit" onclick="submitForm()"><span
+                        style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.save}</span>
+                    Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail -->
+    <div class="modal-overlay hidden" id="modal-detail">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h2><span
+                        style="display:inline-block;width:20px;vertical-align:middle;margin-right:6px">${ICON.clipboard}</span>
+                    Detail Mata Kuliah</h2>
+                <button class="btn-modal-close" onclick="closeModal('modal-detail')">×</button>
+            </div>
+            <div class="modal-body" id="detail-body"></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-detail')">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/icons.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script>
+        Layout.init('Mata Kuliah');
+        Auth.requireRole(['ADMIN', 'DOSEN', 'MAHASISWA']);
+        const user = Auth.getUser();
+        const isAdmin = user?.role === 'ADMIN';
+        if (!isAdmin) document.getElementById('btn-tambah').style.display = 'none';
+
+        let currentPage = 1, totalPages = 1, searchTimer;
+        let dosenList = [];
+
+        // Load dosen for dropdown
+        async function loadDosenList() {
+            const res = await API.get('/kuliah/dosen');
+            if (res.ok) {
+                dosenList = res.data;
+                refreshDosenSelect();
+            }
+        }
+
+        function refreshDosenSelect() {
+            const el = document.getElementById('f-dosen');
+            if (!el) return;
+            el.innerHTML = '<option value="">– Pilih Dosen –</option>' +
+                dosenList.map(d => `<option value="${d.id}">${d.nama} (${d.nip})</option>`).join('');
+        }
+
+        async function load(page = 1) {
+            currentPage = page;
+            const search = document.getElementById('search').value;
+            const res = await API.get(`/kuliah?page=${page}&limit=10&search=${encodeURIComponent(search)}`);
+            if (!res.ok) { Toast.error(res.message); return; }
+            const { data, pagination } = res;
+            totalPages = pagination.total_pages;
+            document.getElementById('total-info').textContent = `Menampilkan ${data.length} dari ${pagination.total} data`;
+
+            const offset = (page - 1) * 10;
+            document.getElementById('tbody').innerHTML = data.length ? data.map((k, i) => `
+    <tr>
+      <td>${offset + i + 1}</td>
+      <td><span class="badge badge-amber">${k.kode_mk}</span></td>
+      <td><strong>${k.nama_mk}</strong></td>
+      <td><span class="badge badge-blue">${k.sks} SKS</span></td>
+      <td>${k.semester ? 'Sem. ' + k.semester : '-'}</td>
+      <td>${k.nama_dosen || '<span style="color:var(--text-muted)">Belum ditentukan</span>'}</td>
+      <td class="table-actions">
+        <button class="btn-icon detail" onclick="openDetail(${k.id})">${ICON.eye}</button>
+        ${isAdmin ? `<button class="btn-icon edit" onclick="openEdit(${k.id})">${ICON.edit}</button>
+        <button class="btn-icon del"  onclick="hapus(${k.id},'${k.nama_mk}')">${ICON.trash}</button>` : ''}
+      </td>
+    </tr>`).join('')
+                : `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">${ICON.inbox}</div><p>Tidak ada mata kuliah</p></div></td></tr>`;
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const el = document.getElementById('pagination');
+            const maxBtn = 5;
+            let start = Math.max(1, currentPage - 2);
+            let end = Math.min(totalPages, start + maxBtn - 1);
+            if (end - start < maxBtn - 1) start = Math.max(1, end - maxBtn + 1);
+            let html = `<button class="page-btn" onclick="load(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+            for (let i = start; i <= end; i++)
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="load(${i})">${i}</button>`;
+            html += `<button class="page-btn" onclick="load(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+            el.innerHTML = html;
+        }
+
+        function debounceSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(() => load(1), 400); }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function openAdd() {
+            document.getElementById('form-kuliah').reset();
+            document.getElementById('f-id').value = '';
+            document.getElementById('f-sks').value = '2';
+            refreshDosenSelect();
+            document.getElementById('modal-form-title').innerHTML = `<span style="display:inline-block;width:20px;vertical-align:middle;margin-right:6px">${ICON.plus}</span> Tambah Mata Kuliah`;
+            openModal('modal-form');
+        }
+
+        async function openEdit(id) {
+            const res = await API.get('/kuliah/' + id);
+            if (!res.ok) { Toast.error(res.message); return; }
+            const k = res.data;
+            document.getElementById('modal-form-title').innerHTML = `<span style="display:inline-block;width:20px;vertical-align:middle;margin-right:6px">${ICON.edit}</span> Edit Mata Kuliah`;
+            document.getElementById('f-id').value = k.id;
+            document.getElementById('f-kode').value = k.kode_mk;
+            document.getElementById('f-nama').value = k.nama_mk;
+            document.getElementById('f-sks').value = k.sks;
+            document.getElementById('f-semester').value = k.semester || '';
+            refreshDosenSelect();
+            document.getElementById('f-dosen').value = k.dosen_id || '';
+            openModal('modal-form');
+        }
+
+        async function openDetail(id) {
+            const res = await API.get('/kuliah/' + id);
+            if (!res.ok) { Toast.error(res.message); return; }
+            const k = res.data;
+            document.getElementById('detail-body').innerHTML = `
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="font-size:40px;color:var(--primary-color)">${ICON.book}</div>
+      <div style="font-size:18px;font-weight:700;margin-top:8px">${k.nama_mk}</div>
+      <div style="color:var(--text-muted);font-size:13px">${k.kode_mk}</div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="di-label">Kode MK</div><div class="di-value">${k.kode_mk}</div></div>
+      <div class="detail-item"><div class="di-label">SKS</div><div class="di-value">${k.sks} SKS</div></div>
+      <div class="detail-item"><div class="di-label">Semester</div><div class="di-value">${k.semester ? 'Semester ' + k.semester : '-'}</div></div>
+      <div class="detail-item"><div class="di-label">Dosen</div><div class="di-value">${k.nama_dosen || '-'}</div></div>
+    </div>`;
+            openModal('modal-detail');
+        }
+
+        async function submitForm() {
+            const btn = document.getElementById('btn-submit');
+            btn.disabled = true; btn.textContent = 'Menyimpan...';
+            const id = document.getElementById('f-id').value;
+            const body = {
+                kode_mk: document.getElementById('f-kode').value,
+                nama_mk: document.getElementById('f-nama').value,
+                sks: +document.getElementById('f-sks').value,
+                semester: +document.getElementById('f-semester').value || null,
+                dosen_id: document.getElementById('f-dosen').value || null,
+            };
+            const res = id ? await API.put(`/kuliah/${id}`, body) : await API.post('/kuliah', body);
+            if (res.ok) {
+                Toast.success(res.message, id ? 'Diperbarui' : 'Ditambahkan');
+                closeModal('modal-form'); load(id ? currentPage : 1);
+            } else Toast.error(res.message);
+            btn.disabled = false; btn.innerHTML = `${ICON.save} Simpan`;
+        }
+
+        function hapus(id, nama) {
+            Confirm.show(`Hapus mata kuliah <strong>${nama}</strong>?`, async () => {
+                const res = await API.delete('/kuliah/' + id);
+                if (res.ok) { Toast.success(res.message, 'Berhasil'); load(currentPage); }
+                else Toast.error(res.message);
+            });
+        }
+
+        loadDosenList();
+        load();
+    </script>
+</body>
+
+</html>
