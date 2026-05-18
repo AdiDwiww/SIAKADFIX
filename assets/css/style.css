@@ -182,12 +182,13 @@ button { font-family: inherit; cursor: pointer; border: none; }
   border: 1px solid var(--border);
   overflow: hidden;
 }
-.card-header {
+..card-header {
   padding: 18px 22px;
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
   font-weight: 600; font-size: 15px;
 }
+.button-group { display: flex; gap: 8px; align-items: center; }
 .card-body { padding: 22px; }
 
 /* Stat Cards */

@@ -70,6 +70,67 @@ class KuliahController {
         Response::success(['id' => $this->db->lastInsertId()], 'Mata kuliah berhasil ditambahkan.', 201);
     }
 
+    public function import(): void {
+        $p = AuthMiddleware::validate();
+        AuthMiddleware::requireRole($p, 'ADMIN');
+
+        $d = json_decode(file_get_contents('php://input'), true) ?? [];
+        $items = $d['items'] ?? [];
+        if (!is_array($items)) Response::error('Format import tidak valid.', 422);
+
+        $dosenRows = $this->db->query("SELECT id, nip FROM dosen")->fetchAll();
+        $dosenById = [];
+        $dosenByNip = [];
+        foreach ($dosenRows as $row) {
+            $dosenById[(int)$row['id']] = (int)$row['id'];
+            $dosenByNip[trim($row['nip'])] = (int)$row['id'];
+        }
+
+        $result = ['imported' => 0, 'skipped' => 0, 'errors' => []];
+        $insertStmt = $this->db->prepare(
+            "INSERT INTO kuliah (kode_mk,nama_mk,sks,semester,dosen_id) VALUES (?,?,?,?,?)"
+        );
+
+        foreach ($items as $index => $item) {
+            $rowNumber = $index + 1;
+            $kode = trim($item['kode_mk'] ?? $item['kode'] ?? '');
+            $nama = trim($item['nama_mk'] ?? $item['nama'] ?? '');
+            $sks  = (int)($item['sks'] ?? 2);
+            $sem  = (int)($item['semester'] ?? 0);
+            $dosenRef = trim((string)($item['dosen_id'] ?? $item['dosen_nip'] ?? $item['dosen'] ?? ''));
+
+            if (!$kode || !$nama) {
+                $result['errors'][] = "Baris {$rowNumber}: Kode MK dan Nama MK wajib diisi.";
+                continue;
+            }
+
+            $chk = $this->db->prepare("SELECT id FROM kuliah WHERE kode_mk = ?");
+            $chk->execute([$kode]);
+            if ($chk->fetch()) {
+                $result['skipped']++;
+                continue;
+            }
+
+            $dosenId = null;
+            if ($dosenRef !== '') {
+                if (is_numeric($dosenRef) && isset($dosenById[(int)$dosenRef])) {
+                    $dosenId = (int)$dosenRef;
+                } elseif (isset($dosenByNip[$dosenRef])) {
+                    $dosenId = $dosenByNip[$dosenRef];
+                }
+            }
+
+            try {
+                $insertStmt->execute([$kode, $nama, $sks ?: 2, $sem ?: null, $dosenId]);
+                $result['imported']++;
+            } catch (Throwable $e) {
+                $result['errors'][] = "Baris {$rowNumber}: Gagal menambahkan mata kuliah ({$e->getMessage()}).";
+            }
+        }
+
+        Response::success($result, 'Import mata kuliah selesai.');
+    }
+
     public function update(string $id): void {
         $p = AuthMiddleware::validate();
         AuthMiddleware::requireRole($p, 'ADMIN');

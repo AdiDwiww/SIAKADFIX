@@ -88,6 +88,52 @@ class MahasiswaController {
         Response::success(['id' => $this->db->lastInsertId()], 'Mahasiswa berhasil ditambahkan.', 201);
     }
 
+    public function import(): void {
+        $p = AuthMiddleware::validate();
+        AuthMiddleware::requireRole($p, 'ADMIN');
+
+        $d = json_decode(file_get_contents('php://input'), true) ?? [];
+        $items = $d['items'] ?? [];
+        if (!is_array($items)) Response::error('Format import tidak valid.', 422);
+
+        $result = ['imported' => 0, 'skipped' => 0, 'errors' => []];
+        $insertStmt = $this->db->prepare(
+            "INSERT INTO mahasiswa (nim,nama,email,telepon,alamat,jurusan,angkatan) VALUES (?,?,?,?,?,?,?)"
+        );
+
+        foreach ($items as $index => $item) {
+            $rowNumber = $index + 1;
+            $nim     = trim($item['nim'] ?? '');
+            $nama    = trim($item['nama'] ?? '');
+            $email   = trim($item['email'] ?? '');
+            $telepon = trim($item['telepon'] ?? '');
+            $alamat  = trim($item['alamat'] ?? '');
+            $jurusan = trim($item['jurusan'] ?? '');
+            $angkatan = trim((string)($item['angkatan'] ?? ''));
+
+            if (!$nim || !$nama) {
+                $result['errors'][] = "Baris {$rowNumber}: NIM dan Nama wajib diisi.";
+                continue;
+            }
+
+            $chk = $this->db->prepare("SELECT id FROM mahasiswa WHERE nim = ?");
+            $chk->execute([$nim]);
+            if ($chk->fetch()) {
+                $result['skipped']++;
+                continue;
+            }
+
+            try {
+                $insertStmt->execute([$nim,$nama,$email,$telepon,$alamat,$jurusan,$angkatan ?: null]);
+                $result['imported']++;
+            } catch (Throwable $e) {
+                $result['errors'][] = "Baris {$rowNumber}: Gagal menambahkan mahasiswa ({$e->getMessage()}).";
+            }
+        }
+
+        Response::success($result, 'Import mahasiswa selesai.');
+    }
+
     /* POST /api/mahasiswa/{id}  (multipart update) */
     public function update(string $id): void {
         $p = AuthMiddleware::validate();
