@@ -25,13 +25,17 @@
             <div class="topbar-right"><span id="topbar-user" class="topbar-user"></span></div>
         </div>
 
-        <div class="page-content">
-            <div class="card">
-                <div class="card-header">
-                    <span><span
-                            style="display:inline-block;width:18px;vertical-align:middle;margin-right:6px">${ICON.book}</span>
-                        Daftar Mata Kuliah</span>
-                    <div class="button-group">
+        <div class="page-content clean-page course-page">
+            <div class="card clean-card">
+                <div class="card-header clean-card-header course-card-header">
+                    <div class="card-title">
+                        <span class="title-icon">${ICON.book}</span>
+                        <div>
+                            <div class="title-text">Daftar Mata Kuliah</div>
+                            <div class="title-sub">Atur mata kuliah, impor data, dan aksi cepat.</div>
+                        </div>
+                    </div>
+                    <div class="button-group clean-actions">
                         <button class="btn btn-secondary btn-sm" id="btn-import" onclick="openImport()"><span
                                 style="display:inline-block;width:14px;vertical-align:middle;margin-right:4px">${ICON.plus}</span>
                             Impor Excel</button>
@@ -42,13 +46,19 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="table-toolbar">
-                        <input type="text" id="search" class="search-input" placeholder="Cari Kode / Nama MK..."
-                            oninput="debounceSearch()">
-                        <span id="total-info" class="pagination-info"></span>
+                    <div class="table-toolbar clean-toolbar">
+                        <div class="search-wrap">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="7"></circle>
+                                <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                            </svg>
+                            <input type="text" id="search" class="search-input search-pill"
+                                placeholder="Cari Kode / Nama MK..." oninput="debounceSearch()">
+                        </div>
+                        <span id="total-info" class="pagination-info total-pill"></span>
                     </div>
                     <div class="table-container">
-                        <table>
+                        <table class="clean-table">
                             <thead>
                                 <tr>
                                     <th>No</th>
