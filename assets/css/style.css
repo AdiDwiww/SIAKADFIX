@@ -1,8 +1,8 @@
 /* =========================================================
-   SIA Akademik – Global Styles
-   Font: Inter (Google Fonts)
+  SIA Akademik – Global Styles
+  Font: Manrope + Fraunces (Google Fonts)
    ========================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
 /* ---------- Reset & Variables ---------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,7 +30,7 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Manrope', sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -157,7 +157,7 @@ button { font-family: inherit; cursor: pointer; border: none; }
   transition: background var(--transition);
 }
 .btn-menu-toggle:hover { background: var(--bg); }
-.page-title { font-size: 18px; font-weight: 700; color: var(--text); }
+.page-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--text); }
 .topbar-right { display: flex; align-items: center; gap: 12px; }
 .topbar-user { font-size: 14px; font-weight: 500; color: var(--text-muted); }
 
@@ -182,7 +182,7 @@ button { font-family: inherit; cursor: pointer; border: none; }
   border: 1px solid var(--border);
   overflow: hidden;
 }
-..card-header {
+.card-header {
   padding: 18px 22px;
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
@@ -190,6 +190,129 @@ button { font-family: inherit; cursor: pointer; border: none; }
 }
 .button-group { display: flex; gap: 8px; align-items: center; }
 .card-body { padding: 22px; }
+
+/* =========================================================
+   CLEAN MODERN PAGE SHELL
+   ========================================================= */
+.clean-page,
+.student-page {
+  position: relative;
+  overflow: hidden;
+}
+.clean-page::before,
+.clean-page::after,
+.student-page::before,
+.student-page::after {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+  z-index: 0;
+}
+.clean-page::before,
+.student-page::before {
+  top: -120px;
+  right: -120px;
+  background: radial-gradient(circle, rgba(56,189,248,.55), rgba(56,189,248,0));
+}
+.clean-page::after,
+.student-page::after {
+  bottom: -140px;
+  left: -140px;
+  background: radial-gradient(circle, rgba(251,191,36,.45), rgba(251,191,36,0));
+}
+.clean-page .card,
+.clean-page .table-toolbar,
+.clean-page .table-container,
+.student-page .card,
+.student-page .table-toolbar,
+.student-page .table-container {
+  position: relative;
+  z-index: 1;
+}
+.clean-card,
+.student-card {
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+.clean-card-header,
+.student-card-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #e6f4ff 55%, #fef3c7 100%);
+}
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.title-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: rgba(59,130,246,.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+.title-text {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.title-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.clean-actions .btn,
+.student-actions .btn {
+  border-radius: 10px;
+}
+.clean-toolbar,
+.student-toolbar {
+  background: rgba(248, 250, 252, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px 10px;
+  min-width: 260px;
+}
+.search-wrap svg { color: var(--text-muted); }
+.search-pill {
+  border: none;
+  background: transparent;
+  padding: 6px 4px;
+  width: 220px;
+}
+.search-pill:focus { outline: none; box-shadow: none; }
+.total-pill {
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.clean-table,
+.student-table {
+  animation: floatIn .35s ease;
+}
+@keyframes floatIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
 
 /* Stat Cards */
 .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-bottom: 28px; }
@@ -264,6 +387,7 @@ button { font-family: inherit; cursor: pointer; border: none; }
   transition: border-color var(--transition), box-shadow var(--transition);
 }
 .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+.search-wrap .search-pill:focus { border-color: transparent; box-shadow: none; }
 
 .table-container { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -493,4 +617,30 @@ input[type="checkbox"] {
   .sidebar.mobile-open { transform: none; }
   .main-content { margin-left: 0; }
   .page-content { padding: 16px; }
+  .clean-toolbar, .student-toolbar { flex-direction: column; align-items: stretch; }
+  .search-wrap { width: 100%; }
+  .search-pill { width: 100%; }
+}
+
+/* =========================================================
+   PAGE VARIANTS
+   ========================================================= */
+.staff-page::before {
+  background: radial-gradient(circle, rgba(34,197,94,.45), rgba(34,197,94,0));
+}
+.staff-page::after {
+  background: radial-gradient(circle, rgba(59,130,246,.35), rgba(59,130,246,0));
+}
+.staff-card-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #e9f7ef 55%, #e6f4ff 100%);
+}
+
+.course-page::before {
+  background: radial-gradient(circle, rgba(14,165,233,.45), rgba(14,165,233,0));
+}
+.course-page::after {
+  background: radial-gradient(circle, rgba(251,146,60,.35), rgba(251,146,60,0));
+}
+.course-card-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 55%, #ffedd5 100%);
 }
