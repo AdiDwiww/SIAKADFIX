@@ -1,5 +1,5 @@
 /**
- * layout.js – Renders responsive sidebar + topbar
+ * layout.js – Renders responsive dark-themed sidebar + topbar
  */
 const Layout = {
   init(pageTitle = '') {
@@ -61,12 +61,15 @@ const Layout = {
     return `
       <div class="sidebar-header">
         <div class="sidebar-logo">
-          <div class="logo-icon">${ICON.award}</div>
+          <img src="../assets/img/logo-unri.png" alt="Logo UNRI" style="width:42px;height:42px;border-radius:12px;object-fit:contain">
           <span>SIA<br>AKADEMIK</span>
         </div>
       </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section-label">Menu Utama</div>
+      <div class="sidebar-search">
+        <input type="text" class="sidebar-search-input" placeholder="Search menu…" oninput="Layout._filterNav(this.value)" style="background-image:url('data:image/svg+xml,%3Csvg width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b8575%22 stroke-width=%222%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle cx=%2211%22 cy=%2211%22 r=%227%22/%3E%3Cline x1=%2216.65%22 y1=%2216.65%22 x2=%2221%22 y2=%2221%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:10px center;padding-left:34px">
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <div class="nav-section-label">Navigation</div>
         ${items}
       </nav>
       <div class="sidebar-footer">
@@ -81,5 +84,17 @@ const Layout = {
           <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         </button>
       </div>`;
+  },
+
+  /** Filter sidebar nav items by search text */
+  _filterNav(query) {
+    const nav = document.getElementById('sidebar-nav');
+    if (!nav) return;
+    const items = nav.querySelectorAll('.nav-item');
+    const q = query.toLowerCase().trim();
+    items.forEach(item => {
+      const label = item.textContent.toLowerCase();
+      item.style.display = !q || label.includes(q) ? '' : 'none';
+    });
   },
 };
