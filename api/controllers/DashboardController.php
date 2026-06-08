@@ -32,6 +32,30 @@ class DashboardController {
              ORDER BY k.created_at DESC LIMIT 5"
         )->fetchAll();
 
+        // ─── Analytics: Jurusan Distribution ───────────────────
+        $jurusanDist = $this->db->query(
+            "SELECT COALESCE(jurusan, 'Belum Ditentukan') AS jurusan, COUNT(*) AS count
+             FROM mahasiswa GROUP BY jurusan ORDER BY count DESC"
+        )->fetchAll();
+
+        // ─── Analytics: Semester Distribution ──────────────────
+        $semesterDist = $this->db->query(
+            "SELECT semester, COUNT(*) AS count
+             FROM kuliah WHERE semester IS NOT NULL
+             GROUP BY semester ORDER BY semester ASC"
+        )->fetchAll();
+
+        // ─── Analytics: SKS Totals ─────────────────────────────
+        $sksData = $this->db->query(
+            "SELECT COALESCE(SUM(sks), 0) AS total_sks, ROUND(COALESCE(AVG(sks), 0), 1) AS avg_sks FROM kuliah"
+        )->fetch();
+
+        // ─── Analytics: Angkatan Distribution ──────────────────
+        $angkatanDist = $this->db->query(
+            "SELECT COALESCE(angkatan, 'N/A') AS angkatan, COUNT(*) AS count
+             FROM mahasiswa GROUP BY angkatan ORDER BY angkatan DESC"
+        )->fetchAll();
+
         Response::success([
             'role'  => $payload['role'],
             'stats' => [
@@ -42,6 +66,12 @@ class DashboardController {
             'latest_mahasiswa' => $latestMhs,
             'latest_dosen'     => $latestDsn,
             'latest_kuliah'    => $latestMk,
+            // New analytics data
+            'jurusan_distribution'  => $jurusanDist,
+            'semester_distribution' => $semesterDist,
+            'angkatan_distribution' => $angkatanDist,
+            'total_sks'             => (int) $sksData['total_sks'],
+            'avg_sks'               => (float) $sksData['avg_sks'],
         ]);
     }
 }
