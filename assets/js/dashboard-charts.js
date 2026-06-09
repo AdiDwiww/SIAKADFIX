@@ -37,9 +37,9 @@ const DashboardCharts = {
 
     // Colors
     const colors = opts.colors || [
-      '#004aad', '#004099', '#003685', '#002d70',
-      '#1a5cbd', '#336ecc', '#4d81db', '#6693eb',
-      '#80a6fa', '#99b8ff'
+      '#fba319', '#ea9412', '#d4830b', '#bc7305',
+      '#fbc455', '#fbaf2f', '#db8e0d', '#ba7708',
+      '#fcd378', '#fce2a3'
     ];
     const gridColor = 'rgba(0,0,0,0.06)';
     const textColor = 'rgba(0,0,0,0.4)';
@@ -262,8 +262,8 @@ const DashboardCharts = {
     const total = data.reduce((s, d) => s + d.value, 0);
 
     const colors = opts.colors || [
-      '#004aad', '#004099', '#003685', '#002d70',
-      '#1a5cbd', '#336ecc', '#4d81db'
+      '#fba319', '#ea9412', '#d4830b', '#bc7305',
+      '#fbc455', '#fbaf2f', '#db8e0d'
     ];
 
     let startAngle = -Math.PI / 2;

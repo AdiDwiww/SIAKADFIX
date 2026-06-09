@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mata Kuliah – SIA Akademik</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css?v=2">
 </head>
 
 <body>
@@ -47,13 +47,26 @@
                 </div>
                 <div class="card-body">
                     <div class="table-toolbar clean-toolbar">
-                        <div class="search-wrap">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="7"></circle>
-                                <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
-                            </svg>
-                            <input type="text" id="search" class="search-input search-pill"
-                                placeholder="Cari Kode / Nama MK..." oninput="debounceSearch()">
+                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                            <div class="search-wrap" style="margin-bottom: 0;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
+                                <input type="text" id="search" class="search-input search-pill"
+                                    placeholder="Cari Kode / Nama MK..." oninput="debounceSearch()">
+                            </div>
+                            <select id="filter-semester" class="form-control" style="width: auto; border-radius: 20px; padding-left: 15px; padding-right: 30px; height: 38px;" onchange="load(1)">
+                                <option value="">Semua Semester</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
                         </div>
                         <span id="total-info" class="pagination-info total-pill"></span>
                     </div>
@@ -218,7 +231,9 @@
         async function load(page = 1) {
             currentPage = page;
             const search = document.getElementById('search').value;
-            const res = await API.get(`/kuliah?page=${page}&limit=10&search=${encodeURIComponent(search)}`);
+            const filterSemesterEl = document.getElementById('filter-semester');
+            const semester = filterSemesterEl ? filterSemesterEl.value : '';
+            const res = await API.get(`/kuliah?page=${page}&limit=10&search=${encodeURIComponent(search)}&semester=${semester}`);
             if (!res.ok) { Toast.error(res.message); return; }
             const { data, pagination } = res;
             totalPages = pagination.total_pages;
@@ -450,7 +465,8 @@
                 const record = {};
                 if (hasHeader) {
                     for (let j = 0; j < row.length; j++) {
-                        const key = headers[j] || `col${j}`;
+                        let key = headers[j] || `col${j}`;
+                        key = key.replace(/ /g, '_');
                         record[key] = row[j];
                     }
                 } else {

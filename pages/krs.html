@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartu Rencana Studi (KRS) – SIAKAD</title>
+    <link rel="stylesheet" href="../assets/css/style.css?v=2">
+    <style>
+        .krs-header-info {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .info-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .info-value {
+            font-size: 16px;
+            color: var(--text-bright);
+            font-weight: 700;
+        }
+        
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th, td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: var(--surface-2);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            font-size: 14px;
+            color: var(--text-bright);
+        }
+        tr:last-child td { border-bottom: none; }
+        
+        /* Checkbox styling */
+        .checkbox-container {
+            display: block;
+            position: relative;
+            padding-left: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            user-select: none;
+        }
+        .checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        .checkmark {
+            position: absolute;
+            top: -2px;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            transition: all var(--transition);
+        }
+        .checkbox-container:hover input ~ .checkmark {
+            background-color: var(--input-focus);
+        }
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: #0ea5e9;
+            border-color: #0ea5e9;
+        }
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+        .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+        .checkbox-container .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        .krs-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-2);
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+        .total-sks-display {
+            font-size: 20px;
+            font-weight: 800; letter-spacing: 0.5px;
+            font-weight: 700;
+            color: var(--text-bright);
+        }
+        .total-sks-display span {
+            color: #0ea5e9;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content" id="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="btn-menu-toggle" id="btn-menu-toggle" onclick="Layout.toggleSidebar()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <span id="page-title" class="page-title">Kartu Rencana Studi (KRS)</span>
+            </div>
+            <div class="topbar-right" style="gap: 16px;">
+                <span id="topbar-user" class="topbar-user"></span>
+            </div>
+        </div>
+        
+        <div class="page-content">
+            <div class="page-header" style="margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Pengisian KRS</h1>
+                    <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;" id="krs-subtitle">Tahun Akademik 2022/2023</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <label style="font-size:13px; color:var(--text-muted); font-weight:600;">Semester:</label>
+                    <select id="sem-filter" onchange="changeSemester()" style="padding:8px 12px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text-bright); font-size:14px; font-weight:600; cursor:pointer;">
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                        <option value="7">Semester 7</option>
+                        <option value="8">Semester 8</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="krs-header-info">
+                <div class="info-item">
+                    <span class="info-label">Batas Waktu Pengisian</span>
+                    <span class="info-value" style="color:#f59e0b">30 Juni 2023</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Maksimal SKS</span>
+                    <span class="info-value">24 SKS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Dosen Pembimbing Akademik</span>
+                    <span class="info-value">Dr. Ahmad Reza, M.Kom</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status KRS</span>
+                    <span class="info-value"><span class="badge badge-amber">Belum Diajukan</span></span>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table id="krs-table">
+                    <thead>
+                        <tr>
+                            <th style="width:50px">Pilih</th>
+                            <th>Kode MK</th>
+                            <th>Mata Kuliah</th>
+                            <th>SKS</th>
+                            <th>Dosen Pengampu</th>
+                            <th>Jadwal & Ruangan</th>
+                            <th>Kuota</th>
+                        </tr>
+                    </thead>
+                    <tbody id="krs-body">
+                        <!-- Content loaded by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="krs-footer">
+                <div class="total-sks-display">
+                    Total SKS Dipilih: <span id="total-sks">0</span> / 24
+                </div>
+                <div>
+                    <button class="btn btn-secondary" style="margin-right:8px" onclick="Toast.info('KRS telah disimpan sebagai draft', 'Draft Disimpan')">Simpan Draft</button>
+                    <button class="btn btn-primary" onclick="ajukanKRS()">Ajukan KRS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../assets/js/icons.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script>
+        Layout.init('KRS');
+
+        let availableMK = [];
+        let myKRS = [];
+        let currentSemester = 1;
+
+        async function loadKRS(semester = null) {
+            const url = semester ? `/krs?semester=${semester}` : '/krs';
+            const res = await API.get(url);
+            if (!res.ok) { Toast.error(res.message); return; }
+            availableMK = res.data.available;
+            myKRS = res.data.selected;
+            currentSemester = res.data.semester_aktif || 1;
+
+            // Update semester dropdown
+            document.getElementById('sem-filter').value = currentSemester;
+
+            // Update subtitle
+            const semType = currentSemester % 2 === 1 ? 'Ganjil' : 'Genap';
+            document.getElementById('krs-subtitle').textContent =
+                `Semester ${currentSemester} – ${semType} ${res.data.tahun_akademik || '2022/2023'}`;
+
+            const statusBadge = document.querySelector('.info-value .badge');
+            if (statusBadge) {
+                const st = res.data.status;
+                statusBadge.className = st === 'DISETUJUI' ? 'badge badge-blue' : 'badge badge-amber';
+                statusBadge.textContent = st === 'DISETUJUI' ? 'Disetujui' : 'Belum Diajukan';
+            }
+            renderMKList();
+        }
+
+        function changeSemester() {
+            const sem = document.getElementById('sem-filter').value;
+            loadKRS(sem);
+        }
+
+        function renderMKList() {
+            const tbody = document.getElementById('krs-body');
+            tbody.innerHTML = availableMK.map(mk => {
+                const isChecked = myKRS.includes(mk.kode_mk) ? 'checked' : '';
+                const jadwal = mk.jadwal || `${mk.hari}, ${mk.jam} (${mk.ruang})`;
+                return `
+                    <tr>
+                        <td>
+                            <label class="checkbox-container">
+                                <input type="checkbox" class="krs-checkbox" value="${mk.sks}" data-kode="${mk.kode_mk}" onchange="updateTotal()" ${isChecked}>
+                                <span class="checkmark"></span>
+                            </label>
+                        </td>
+                        <td><span class="badge badge-blue">${mk.kode_mk}</span></td>
+                        <td style="font-weight:500">${mk.nama_mk}</td>
+                        <td>${mk.sks}</td>
+                        <td>${mk.nama_dosen || '-'}</td>
+                        <td style="color:var(--text-muted)">${jadwal}</td>
+                        <td>${myKRS.includes(mk.kode_mk) ? 'Terdaftar' : '30'}/${mk.kuota || 40}</td>
+                    </tr>
+                `;
+            }).join('');
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('.krs-checkbox:checked').forEach(cb => {
+                total += parseInt(cb.value);
+            });
+            const span = document.getElementById('total-sks');
+            span.textContent = total;
+            span.style.color = total > 24 ? '#ef4444' : '#0ea5e9';
+        }
+
+        function ajukanKRS() {
+            let total = parseInt(document.getElementById('total-sks').textContent);
+            if (total === 0) { Toast.warning('Silakan pilih minimal 1 Mata Kuliah terlebih dahulu.'); return; }
+            if (total > 24) { Toast.error('Gagal mengajukan KRS. Total SKS Anda melebihi batas maksimal 24 SKS.'); return; }
+
+            Confirm.show('Apakah Anda yakin ingin menyimpan KRS ini?', async () => {
+                Loading.show();
+                const selected = [];
+                document.querySelectorAll('.krs-checkbox:checked').forEach(cb => {
+                    selected.push(cb.getAttribute('data-kode'));
+                });
+                const res = await API.post('/krs', { kode_mk: selected });
+                Loading.hide();
+                if (res.ok) {
+                    Toast.success('KRS berhasil disimpan.');
+                    myKRS = selected;
+                    const statusBadge = document.querySelector('.info-value .badge');
+                    if (statusBadge) { statusBadge.className = 'badge badge-blue'; statusBadge.textContent = 'Disetujui'; }
+                } else {
+                    Toast.error(res.message);
+                }
+            }, 'Simpan KRS', 'Ya, Simpan');
+        }
+
+        loadKRS();
+</script>
+</body>
+</html>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Dosen – SIAKAD</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css?v=2">
 </head>
 
 <body>
@@ -432,7 +432,8 @@
                 const record = {};
                 if (hasHeader) {
                     for (let j = 0; j < row.length; j++) {
-                        const key = headers[j] || `col${j}`;
+                        let key = headers[j] || `col${j}`;
+                        key = key.replace(/ /g, '_');
                         record[key] = row[j];
                     }
                 } else {

@@ -1,10 +1,17 @@
-TI-101,Pemrograman Dasar,3,1,1
-TI-102,Struktur Data,3,2,2
-TI-103,Basis Data,3,3,3
-TI-104,Organisasi & Arsitektur Komputer,3,3,4
-TI-105,Rekayasa Perangkat Lunak,3,4,5
-TI-106,Jaringan Komputer,3,4,6
-TI-107,Kecerdasan Buatan,3,5,7
-TI-108,Manajemen Proyek TI,2,5,8
-TI-109,Sistem Informasi,3,6,9
-TI-110,Keamanan Siber,3,6,10
+Kode,Nama,SKS,Semester,Dosen_ID
+TI101,Pemrograman Dasar,3,1,198501012010011001
+TI102,Matematika Diskrit,3,1,199002022015011002
+TI103,Pengantar Teknologi Informasi,2,1,199103032016011003
+TI201,Struktur Data,3,2,198501012010011001
+TI202,Kalkulus Lanjut,3,2,199002022015011002
+TI203,Sistem Digital,3,2,199103032016011003
+TI301,Basis Data,3,3,198501012010011001
+TI302,Algoritma & Pemrograman Lanjut,3,3,199002022015011002
+TI303,Jaringan Komputer,3,3,199103032016011003
+TI401,Pemrograman Web Lanjut,3,4,198501012010011001
+TI402,Rekayasa Perangkat Lunak,3,4,199002022015011002
+TI403,Sistem Operasi,3,4,199103032016011003
+TI501,Kecerdasan Buatan,3,5,198501012010011001
+TI502,Data Science,3,5,199002022015011002
+TI601,Keamanan Siber,3,6,199103032016011003
+TI602,Manajemen Proyek TI,2,6,198501012010011001

@@ -109,6 +109,22 @@ class AuthController {
     /* GET /api/auth/me */
     public function me(): void {
         $payload = AuthMiddleware::validate();
-        Response::success($payload);
+
+        $st = $this->db->prepare("SELECT id, username, email, role FROM users WHERE id = ?");
+        $st->execute([$payload['id']]);
+        $user = $st->fetch();
+
+        $profile = null;
+        if ($user['role'] === 'DOSEN') {
+            $ps = $this->db->prepare("SELECT * FROM dosen WHERE user_id = ?");
+            $ps->execute([$user['id']]);
+            $profile = $ps->fetch() ?: null;
+        } elseif ($user['role'] === 'MAHASISWA') {
+            $ps = $this->db->prepare("SELECT * FROM mahasiswa WHERE user_id = ?");
+            $ps->execute([$user['id']]);
+            $profile = $ps->fetch() ?: null;
+        }
+
+        Response::success(['user' => $user, 'profile' => $profile]);
     }
 }

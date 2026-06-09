@@ -12,7 +12,8 @@ const Layout = {
 
     // Inject topbar info
     const topUser = document.getElementById('topbar-user');
-    if (topUser) topUser.textContent = user.username + ' (' + user.role + ')';
+    const displayName = user.profile?.nama || user.username;
+    if (topUser) topUser.textContent = displayName + ' (' + user.role + ')';
 
     // Set page title
     const pt = document.getElementById('page-title');
@@ -44,7 +45,17 @@ const Layout = {
       { label: 'Dashboard', page: 'dashboard.html', icon: ICON.home, roles: ['ADMIN', 'DOSEN', 'MAHASISWA'] },
       { label: 'Mahasiswa', page: 'mahasiswa.html', icon: ICON.users, roles: ['ADMIN', 'DOSEN'] },
       { label: 'Dosen', page: 'dosen.html', icon: ICON.user, roles: ['ADMIN'] },
-      { label: 'Mata Kuliah', page: 'kuliah.html', icon: ICON.book, roles: ['ADMIN', 'DOSEN', 'MAHASISWA'] },
+      { label: 'Mata Kuliah', page: 'kuliah.html', icon: ICON.book, roles: ['ADMIN'] },
+      
+      // Menu Khusus Mahasiswa
+      { label: 'KRS', page: 'krs.html', icon: ICON.clipboard, roles: ['MAHASISWA'] },
+      { label: 'KHS / Transkrip', page: 'khs.html', icon: ICON.award, roles: ['MAHASISWA'] },
+      { label: 'Jadwal Kuliah', page: 'jadwal.html', icon: ICON.calendar, roles: ['MAHASISWA'] },
+      
+      // Menu Khusus Dosen
+      { label: 'Jadwal Mengajar', page: 'jadwal_dosen.html', icon: ICON.calendar, roles: ['DOSEN'] },
+      { label: 'Input Nilai', page: 'input_nilai.html', icon: ICON.edit, roles: ['DOSEN'] },
+
       { label: 'Ganti Password', page: 'change-password.html', icon: ICON.key, roles: ['ADMIN', 'DOSEN', 'MAHASISWA'] },
     ];
 
@@ -57,16 +68,16 @@ const Layout = {
         </a>`)
       .join('');
 
-    const initials = user.username.charAt(0).toUpperCase();
+    const displayName = user.profile?.nama || user.username;
+    const initials = displayName.charAt(0).toUpperCase();
     return `
       <div class="sidebar-header">
         <div class="sidebar-logo">
-          <img src="../assets/img/logo-unri.png" alt="Logo UNRI" style="width:42px;height:42px;border-radius:12px;object-fit:contain">
-          <span>SIA<br>AKADEMIK</span>
+          <span>SI<br>AKADEMIK</span>
         </div>
       </div>
       <div class="sidebar-search">
-        <input type="text" class="sidebar-search-input" placeholder="Search menu…" oninput="Layout._filterNav(this.value)" style="background-image:url('data:image/svg+xml,%3Csvg width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b8575%22 stroke-width=%222%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle cx=%2211%22 cy=%2211%22 r=%227%22/%3E%3Cline x1=%2216.65%22 y1=%2216.65%22 x2=%2221%22 y2=%2221%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:10px center;padding-left:34px">
+        <input type="text" class="sidebar-search-input" placeholder="Search menu…" oninput="Layout._filterNav(this.value)" style="background-image:url('data:image/svg+xml,%3Csvg width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2364748b%22 stroke-width=%222%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle cx=%2211%22 cy=%2211%22 r=%227%22/%3E%3Cline x1=%2216.65%22 y1=%2216.65%22 x2=%2221%22 y2=%2221%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:10px center;padding-left:34px">
       </div>
       <nav class="sidebar-nav" id="sidebar-nav">
         <div class="nav-section-label">Navigation</div>
@@ -75,7 +86,7 @@ const Layout = {
       <div class="sidebar-footer">
         <div class="sidebar-avatar">${initials}</div>
         <div class="sidebar-user-info">
-          <div class="sidebar-username">${user.username}</div>
+          <div class="sidebar-username" style="font-size: 13px;">${displayName}</div>
           <div class="sidebar-role">${user.role}</div>
         </div>
         <button class="btn-sidebar-logout" onclick="Auth.logout()" title="Logout">

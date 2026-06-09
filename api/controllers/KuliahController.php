@@ -12,26 +12,37 @@ class KuliahController {
 
     public function index(): void {
         AuthMiddleware::validate();
-        $page   = max(1, (int)($_GET['page']  ?? 1));
-        $limit  = max(1, (int)($_GET['limit'] ?? 10));
-        $search = trim($_GET['search'] ?? '');
-        $offset = ($page - 1) * $limit;
+        $page     = max(1, (int)($_GET['page']  ?? 1));
+        $limit    = max(1, (int)($_GET['limit'] ?? 10));
+        $search   = trim($_GET['search'] ?? '');
+        $semester = isset($_GET['semester']) && $_GET['semester'] !== '' ? (int)$_GET['semester'] : 0;
+        $offset   = ($page - 1) * $limit;
 
         $baseQ  = "FROM kuliah k LEFT JOIN dosen d ON k.dosen_id = d.id";
         $selQ   = "SELECT k.*, d.nama AS nama_dosen $baseQ";
 
+        $whereCols = [];
+        $params    = [];
+
         if ($search) {
-            $like  = "%$search%";
-            $stC   = $this->db->prepare("SELECT COUNT(*) $baseQ WHERE k.kode_mk LIKE ? OR k.nama_mk LIKE ?");
-            $stC->execute([$like,$like]);
-            $total = (int)$stC->fetchColumn();
-            $stD   = $this->db->prepare("$selQ WHERE k.kode_mk LIKE ? OR k.nama_mk LIKE ? ORDER BY k.created_at DESC LIMIT $limit OFFSET $offset");
-            $stD->execute([$like,$like]);
-        } else {
-            $total = (int)$this->db->query("SELECT COUNT(*) FROM kuliah")->fetchColumn();
-            $stD   = $this->db->prepare("$selQ ORDER BY k.created_at DESC LIMIT $limit OFFSET $offset");
-            $stD->execute();
+            $whereCols[] = "(k.kode_mk LIKE ? OR k.nama_mk LIKE ?)";
+            $params[] = "%$search%";
+            $params[] = "%$search%";
         }
+        
+        if ($semester > 0) {
+            $whereCols[] = "k.semester = ?";
+            $params[] = $semester;
+        }
+
+        $whereClause = !empty($whereCols) ? "WHERE " . implode(" AND ", $whereCols) : "";
+
+        $stC   = $this->db->prepare("SELECT COUNT(*) $baseQ $whereClause");
+        $stC->execute($params);
+        $total = (int)$stC->fetchColumn();
+
+        $stD   = $this->db->prepare("$selQ $whereClause ORDER BY k.created_at DESC LIMIT $limit OFFSET $offset");
+        $stD->execute($params);
         Response::paginate($stD->fetchAll(), $total, $page, $limit);
     }
 

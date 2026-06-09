@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Nilai & Absensi – SIAKAD</title>
+    <link rel="stylesheet" href="../assets/css/style.css?v=2">
+    <style>
+        .class-selector {
+            background: var(--surface);
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .class-selector select {
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+            color: var(--text-bright);
+            font-size: 14px;
+            min-width: 280px;
+        }
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th, td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        th {
+            background: var(--surface-2);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            font-size: 14px;
+            color: var(--text-bright);
+        }
+        tr:last-child td { border-bottom: none; }
+        
+        .grade-input {
+            width: 60px;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--text-bright);
+            text-align: center;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .grade-input:focus {
+            border-color: #0ea5e9;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(14,165,233,0.2);
+        }
+        
+        .final-grade {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .final-grade.A { color: #10b981; }
+        .final-grade.B { color: #0ea5e9; }
+        .final-grade.C { color: #f59e0b; }
+        .final-grade.D, .final-grade.E { color: #ef4444; }
+
+        .footer-action {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px;
+            background: var(--surface-2);
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content" id="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="btn-menu-toggle" id="btn-menu-toggle" onclick="Layout.toggleSidebar()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <span id="page-title" class="page-title">Input Nilai & Absensi</span>
+            </div>
+            <div class="topbar-right" style="gap: 16px;">
+                <span id="topbar-user" class="topbar-user"></span>
+            </div>
+        </div>
+        
+        <div class="page-content">
+            <div class="page-header" style="margin-bottom: 20px;">
+                <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Input Nilai Mahasiswa</h1>
+                <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">Masukkan komponen nilai dan persentase absensi untuk kelas yang Anda ampu.</p>
+            </div>
+
+            <div class="class-selector">
+                <span style="font-weight:600; color:var(--text-bright)">Pilih Kelas:</span>
+                <select id="select-kelas" onchange="renderStudents()">
+                    <option value="">Memuat kelas...</option>
+                </select>
+                
+                <div style="margin-left:auto; display:flex; gap: 16px; color: var(--text-muted); font-size: 13px;">
+                    <div>Bobot: <strong>Absen 10% | Tugas 20% | UTS 30% | UAS 40%</strong></div>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table id="nilai-table">
+                    <thead>
+                        <tr>
+                            <th>NIM</th>
+                            <th>Nama Mahasiswa</th>
+                            <th style="text-align:center">Absen (%)</th>
+                            <th style="text-align:center">Tugas</th>
+                            <th style="text-align:center">UTS</th>
+                            <th style="text-align:center">UAS</th>
+                            <th style="text-align:center">Nilai Akhir</th>
+                            <th style="text-align:center">Huruf</th>
+                        </tr>
+                    </thead>
+                    <tbody id="nilai-body">
+                        <!-- Content loaded by JS -->
+                    </tbody>
+                </table>
+                <div class="footer-action">
+                    <button class="btn btn-secondary" style="margin-right:8px" onclick="Toast.info('Data nilai disimpan sebagai draft', 'Tersimpan')">Simpan Draft</button>
+                    <button class="btn btn-primary" onclick="publishNilai()">Publikasikan Nilai</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../assets/js/icons.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script>
+        Layout.init('Input Nilai');
+        Auth.requireRole(['DOSEN']);
+
+        // Read kode_mk from URL if coming from jadwal page
+        const _urlParams = new URLSearchParams(window.location.search);
+        const _preselect = _urlParams.get('kode_mk') || '';
+
+        function calculateGrade(absen, tugas, uts, uas) {
+            if (absen === '' || tugas === '' || uts === '' || uas === '') return { akhir: '-', huruf: '-' };
+            const akhir = (Number(absen) * 0.1) + (Number(tugas) * 0.2) + (Number(uts) * 0.3) + (Number(uas) * 0.4);
+            let huruf = 'E';
+            if (akhir >= 85) huruf = 'A';
+            else if (akhir >= 70) huruf = 'B';
+            else if (akhir >= 55) huruf = 'C';
+            else if (akhir >= 40) huruf = 'D';
+            return { akhir: akhir.toFixed(2), huruf };
+        }
+
+        async function loadClasses() {
+            const res = await API.get('/nilai/kelas-list');
+            const sel = document.getElementById('select-kelas');
+            if (!res.ok || !res.data.length) {
+                sel.innerHTML = '<option value="">Tidak ada kelas yang diampu</option>';
+                document.getElementById('nilai-body').innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color: var(--text-muted)">Anda belum mengampu mata kuliah apapun. Hubungi admin untuk menambahkan jadwal.</td></tr>';
+                return;
+            }
+            sel.innerHTML = res.data.map(mk =>
+                `<option value="${mk.kode_mk}" ${mk.kode_mk === _preselect ? 'selected' : ''}>${mk.nama_mk}${mk.kelas ? ' – Kelas ' + mk.kelas : ''} (${mk.kode_mk})</option>`
+            ).join('');
+            renderStudents();
+        }
+
+        async function handleInput(e, nim, field) {
+            const val = e.target.value;
+            const kodeMk = document.getElementById('select-kelas').value;
+            const res = await API.put('/nilai', { kode_mk: kodeMk, nim, field, value: val });
+
+            const row = e.target.closest('tr');
+            if (res.ok && res.data) {
+                row.querySelector('.res-akhir').textContent = res.data.akhir ?? '-';
+                const elHuruf = row.querySelector('.res-huruf');
+                elHuruf.textContent = res.data.huruf ?? '-';
+                elHuruf.className = 'res-huruf final-grade ' + (res.data.huruf ?? '-');
+            }
+        }
+
+        async function renderStudents() {
+            const kodeMk = document.getElementById('select-kelas').value;
+            if (!kodeMk) return;
+            const res = await API.get('/nilai/kelas/' + kodeMk);
+            const tbody = document.getElementById('nilai-body');
+
+            if (!res.ok || !res.data.students.length) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color: var(--text-muted)">Belum ada mahasiswa yang mengambil kelas ini.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = res.data.students.map(m => {
+                const g = calculateGrade(m.absen, m.tugas, m.uts, m.uas);
+                return `<tr>
+                    <td><span class="badge badge-blue">${m.nim}</span></td>
+                    <td style="font-weight:500">${m.nama}</td>
+                    <td style="text-align:center"><input type="number" class="grade-input i-absen" value="${m.absen}" min="0" max="100" oninput="handleInput(event, '${m.nim}', 'absen')"></td>
+                    <td style="text-align:center"><input type="number" class="grade-input i-tugas" value="${m.tugas}" min="0" max="100" oninput="handleInput(event, '${m.nim}', 'tugas')"></td>
+                    <td style="text-align:center"><input type="number" class="grade-input i-uts" value="${m.uts}" min="0" max="100" oninput="handleInput(event, '${m.nim}', 'uts')"></td>
+                    <td style="text-align:center"><input type="number" class="grade-input i-uas" value="${m.uas}" min="0" max="100" oninput="handleInput(event, '${m.nim}', 'uas')"></td>
+                    <td style="text-align:center" class="res-akhir">${g.akhir}</td>
+                    <td style="text-align:center"><span class="res-huruf final-grade ${g.huruf}">${g.huruf}</span></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function publishNilai() {
+            const kodeMk = document.getElementById('select-kelas').value;
+            Confirm.show('Apakah Anda yakin ingin mempublikasikan nilai ini ke portal mahasiswa?', async () => {
+                Loading.show();
+                const res = await API.post('/nilai/publish', { kode_mk: kodeMk });
+                Loading.hide();
+                if (res.ok) Toast.success('Nilai berhasil dipublikasikan!', 'Sukses');
+                else Toast.error(res.message);
+            }, 'Publikasi Nilai', 'Ya, Publikasikan');
+        }
+
+        loadClasses();
+</script>
+</body>
+</html>

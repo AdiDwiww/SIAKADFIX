@@ -6,9 +6,15 @@ const Auth = {
     getUser: () => { try { return JSON.parse(localStorage.getItem('sia_user') || 'null'); } catch { return null; } },
     isLoggedIn: () => !!Auth.getToken(),
 
-    setSession(token, user) {
+    setSession(token, user, profile = null) {
         localStorage.setItem('sia_token', token);
-        localStorage.setItem('sia_user', JSON.stringify(user));
+        const session = profile ? { ...user, profile } : user;
+        localStorage.setItem('sia_user', JSON.stringify(session));
+    },
+
+    getProfile() {
+        const user = Auth.getUser();
+        return user?.profile ?? null;
     },
 
     clearSession() {

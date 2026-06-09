@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KHS & Transkrip – SIAKAD</title>
+    <link rel="stylesheet" href="../assets/css/style.css?v=2">
+    <style>
+        .filter-bar {
+            background: var(--surface);
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .filter-bar select {
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+            color: var(--text-bright);
+            font-size: 14px;
+            min-width: 200px;
+        }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(14,165,233,0.2);
+        }
+        .summary-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            border-radius: 50%;
+        }
+        .summary-card h3 {
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0 0 8px 0;
+            color: rgba(255,255,255,0.8);
+        }
+        .summary-card .value {
+            font-size: 32px;
+            font-weight: 800;
+            font-weight: 800; letter-spacing: 0.5px;
+            margin: 0;
+        }
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th, td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: var(--surface-2);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            font-size: 14px;
+            color: var(--text-bright);
+        }
+        tr:last-child td { border-bottom: none; }
+        .grade-a { color: #10b981; font-weight: 700; }
+        .grade-b { color: #0ea5e9; font-weight: 700; }
+        .grade-c { color: #f59e0b; font-weight: 700; }
+        .grade-d, .grade-e { color: #ef4444; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content" id="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="btn-menu-toggle" id="btn-menu-toggle" onclick="Layout.toggleSidebar()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <span id="page-title" class="page-title">KHS & Transkrip</span>
+            </div>
+            <div class="topbar-right" style="gap: 16px;">
+                <span id="topbar-user" class="topbar-user"></span>
+            </div>
+        </div>
+        
+        <div class="page-content">
+            <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Kartu Hasil Studi</h1>
+                    <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">Lihat rincian nilai Anda setiap semester</p>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <span style="font-weight:600; color:var(--text-bright)">Pilih Semester:</span>
+                <select id="select-semester" onchange="renderKHS()">
+                    <option value="all" selected>Semua (Transkrip Sementara)</option>
+                    <!-- Options populated dynamically by JS -->
+                </select>
+                <button class="btn btn-primary" style="margin-left:auto" onclick="window.print()">
+                    <span style="margin-right:8px; display:flex; align-items:center;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></span> Cetak KHS
+                </button>
+            </div>
+
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3 id="label-ips">IP Semester Ini</h3>
+                    <div class="value" id="val-ips">3.85</div>
+                </div>
+                <div class="summary-card" style="background: linear-gradient(135deg, #fba319, #ea9412);">
+                    <h3>IP Kumulatif (IPK)</h3>
+                    <div class="value" id="val-ipk">3.72</div>
+                </div>
+                <div class="summary-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <h3>SKS Lulus / Total</h3>
+                    <div class="value" id="val-sks">84 / 84</div>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table id="khs-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kode MK</th>
+                            <th>Mata Kuliah</th>
+                            <th>SKS</th>
+                            <th>Nilai Huruf</th>
+                            <th>Bobot</th>
+                            <th>Mutu (SKS × Bobot)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="khs-body">
+                        <!-- Data will be populated via JS -->
+                    </tbody>
+                    <tfoot style="background: var(--surface-2); font-weight: 700;">
+                        <tr>
+                            <td colspan="3" style="text-align: right;">Total Semester:</td>
+                            <td id="tot-sks">0</td>
+                            <td></td>
+                            <td></td>
+                            <td id="tot-mutu">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    
+    <script src="../assets/js/icons.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script>
+        Layout.init('KHS / Transkrip');
+
+        function getGradeClass(grade) {
+            if (grade === 'A') return 'grade-a';
+            if (grade === 'B') return 'grade-b';
+            if (grade === 'C') return 'grade-c';
+            return 'grade-d';
+        }
+
+        async function initKHS() {
+            // First load all data to extract available semesters
+            const res = await API.get('/khs?semester=all');
+            if (!res.ok) { Toast.error(res.message); return; }
+
+            // Build unique semester list from the data
+            const semSet = new Set();
+            (res.data.nilai || []).forEach(row => {
+                // Semester might not be in response; we'll populate after
+            });
+
+            // Populate semester dropdown based on what KRS the student has
+            const selEl = document.getElementById('select-semester');
+            // Fetch kuliah semesters from krs context
+            const semRes = await API.get('/khs?semester=all');
+            if (semRes.ok && semRes.data.nilai.length) {
+                // Try to get semesters from the khs data (not directly available)
+                // Fall back to showing common semesters 1-8
+                const existingSems = [1,2,3,4,5,6,7,8];
+                const insertAfter = selEl.options[0]; // 'all' option
+                existingSems.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s;
+                    opt.textContent = `Semester ${s}`;
+                    selEl.appendChild(opt);
+                });
+            }
+
+            // Now render with 'all' selected
+            renderKHSFromData(res.data);
+        }
+
+        async function renderKHS() {
+            const sem = document.getElementById('select-semester').value;
+            const res = await API.get('/khs?semester=' + sem);
+            if (!res.ok) { Toast.error(res.message); return; }
+            renderKHSFromData(res.data);
+        }
+
+        function renderKHSFromData(data) {
+            const tbody = document.getElementById('khs-body');
+            const nilaiList = data.nilai || [];
+
+            if (!nilaiList.length) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--text-muted)">Data nilai belum tersedia untuk semester ini.</td></tr>';
+                document.getElementById('tot-sks').textContent = 0;
+                document.getElementById('tot-mutu').textContent = 0;
+                document.getElementById('val-ips').textContent = '-';
+                document.getElementById('val-ipk').textContent = '-';
+                document.getElementById('val-sks').textContent = '0 / 0';
+                return;
+            }
+
+            let totalSks = 0, totalMutu = 0;
+            tbody.innerHTML = nilaiList.map((row, idx) => {
+                const bobot = parseFloat(row.bobot) || 0;
+                const huruf = row.nilai_huruf || '-';
+                const mutu = huruf !== '-' ? row.sks * bobot : 0;
+                if (huruf !== '-') { totalSks += row.sks; totalMutu += mutu; }
+                return `<tr>
+                    <td>${idx + 1}</td>
+                    <td><span class="badge badge-blue">${row.kode}</span></td>
+                    <td>${row.nama}</td>
+                    <td>${row.sks}</td>
+                    <td class="${getGradeClass(huruf)}">${huruf}</td>
+                    <td>${bobot.toFixed(2)}</td>
+                    <td>${mutu.toFixed(2)}</td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('tot-sks').textContent = totalSks;
+            document.getElementById('tot-mutu').textContent = totalMutu.toFixed(2);
+            document.getElementById('val-ips').textContent = (data.ips ?? 0).toFixed(2);
+            document.getElementById('val-ipk').textContent = (data.ipk ?? 0).toFixed(2);
+            
+            // Dynamic IPS Label
+            const semAktif = data.semester_aktif || 'all';
+            const labelIps = document.getElementById('label-ips');
+            if (semAktif === 'all') {
+                labelIps.textContent = 'IP Rata-Rata (Semua)';
+            } else {
+                labelIps.textContent = 'IP Semester ' + semAktif;
+            }
+
+            const sksLulus = data.sks_lulus ?? 0;
+            const totalSksAll = data.total_sks_all ?? data.total_sks;
+            document.getElementById('val-sks').textContent = `${sksLulus} / ${totalSksAll}`;
+        }
+
+        initKHS();
+
+</script>
+</body>
+</html>

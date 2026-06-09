@@ -85,6 +85,49 @@ switch ($resource) {
         };
         break;
 
+    /* ── KRS ──────────────────────────────── */
+    case 'krs':
+        require_once dirname(__DIR__) . '/controllers/KrsController.php';
+        $c = new KrsController();
+        match(true) {
+            $method === 'GET'  && !$param1 => $c->index(),
+            $method === 'POST' && !$param1 => $c->store(),
+            default => Response::error('Endpoint tidak ditemukan.', 404),
+        };
+        break;
+
+    /* ── KHS ──────────────────────────────── */
+    case 'khs':
+        require_once dirname(__DIR__) . '/controllers/KhsController.php';
+        $c = new KhsController();
+        if ($method === 'GET' && !$param1) $c->index();
+        else Response::error('Endpoint tidak ditemukan.', 404);
+        break;
+
+    /* ── JADWAL ─────────────────────────── */
+    case 'jadwal':
+        require_once dirname(__DIR__) . '/controllers/JadwalController.php';
+        $c = new JadwalController();
+        match(true) {
+            $method === 'GET' && $param1 === 'dosen' => $c->dosen(),
+            $method === 'GET' && !$param1            => $c->index(),
+            default => Response::error('Endpoint tidak ditemukan.', 404),
+        };
+        break;
+
+    /* ── NILAI ────────────────────────────── */
+    case 'nilai':
+        require_once dirname(__DIR__) . '/controllers/NilaiController.php';
+        $c = new NilaiController();
+        match(true) {
+            $method === 'GET'  && $param1 === 'kelas-list'       => $c->classList(),
+            $method === 'GET'  && $param1 === 'kelas' && $param2 => $c->byClass($param2),
+            $method === 'PUT'  && !$param1                        => $c->update(),
+            $method === 'POST' && $param1 === 'publish'           => $c->publish(),
+            default => Response::error('Endpoint tidak ditemukan.', 404),
+        };
+        break;
+
     default:
         Response::error('Resource tidak ditemukan.', 404);
 }

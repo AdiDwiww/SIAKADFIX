@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Mengajar – SIAKAD</title>
+    <link rel="stylesheet" href="../assets/css/style.css?v=2">
+    <style>
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-top: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th, td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: var(--surface-2);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            font-size: 14px;
+            color: var(--text-bright);
+        }
+        tr:last-child td { border-bottom: none; }
+        .day-label {
+            font-weight: 700;
+            color: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content" id="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="btn-menu-toggle" id="btn-menu-toggle" onclick="Layout.toggleSidebar()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <span id="page-title" class="page-title">Jadwal Mengajar</span>
+            </div>
+            <div class="topbar-right" style="gap: 16px;">
+                <span id="topbar-user" class="topbar-user"></span>
+            </div>
+        </div>
+        
+        <div class="page-content">
+            <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Jadwal Mengajar Dosen</h1>
+                    <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">Semester Genap 2022/2023</p>
+                </div>
+                <button class="btn btn-primary" onclick="window.print()">
+                    <span style="margin-right:8px; display:flex; align-items:center;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    </span> Cetak Jadwal
+                </button>
+            </div>
+
+            <div class="table-wrap">
+                <table id="jadwal-table">
+                    <thead>
+                        <tr>
+                            <th>Hari</th>
+                            <th>Jam</th>
+                            <th>Mata Kuliah</th>
+                            <th>Kelas</th>
+                            <th>Ruangan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jadwal-body">
+                        <!-- Content loaded by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../assets/js/icons.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script>
+        Layout.init('Jadwal Mengajar');
+
+        async function renderJadwal() {
+            const res = await API.get('/jadwal/dosen');
+            const tbody = document.getElementById('jadwal-body');
+            if (!res.ok) { Toast.error(res.message); return; }
+
+            const jadwalData = res.data.jadwal;
+            if (!jadwalData.length) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 30px; color: var(--text-muted)">Tidak ada jadwal mengajar.</td></tr>';
+                return;
+            }
+
+            let currentDay = '';
+            tbody.innerHTML = jadwalData.map(item => {
+                const showDay = item.hari !== currentDay;
+                if (showDay) currentDay = item.hari;
+                return `<tr>
+                    <td class="day-label">${showDay ? item.hari : ''}</td>
+                    <td style="font-weight:500;">${item.jam}</td>
+                    <td>${item.nama}</td>
+                    <td><span class="badge badge-blue">${item.kelas}</span></td>
+                    <td>${item.ruang}</td>
+                    <td>
+                        <a href="input_nilai.html?kode_mk=${encodeURIComponent(item.kode_mk)}" class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px; height: auto;">Input Nilai</a>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        renderJadwal();
+</script>
+</body>
+</html>

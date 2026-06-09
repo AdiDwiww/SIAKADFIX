@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Dashboard Sistem Informasi Akademik – Ringkasan data mahasiswa, dosen, dan mata kuliah">
     <title>Dashboard – SIAKAD</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css?v=2">
 </head>
 
 <body>
@@ -34,6 +34,7 @@
         </div>
 
         <div class="page-content">
+<div id="dashboard-admin" style="display: none;">
 
             <!-- ═══ Row 1: Stat Cards ═══ -->
             <div class="stats-grid" id="stats-grid">
@@ -48,10 +49,10 @@
                     </div>
                     <!-- Decorative mini chart -->
                     <div style="display:flex;align-items:flex-end;gap:4px;height:40px;opacity:1">
-                        <div style="width:6px;height:60%;background:#4ade80;border-radius:2px;box-shadow:0 0 8px rgba(74,222,128,0.4)"></div>
-                        <div style="width:6px;height:100%;background:#4ade80;border-radius:2px;box-shadow:0 0 8px rgba(74,222,128,0.4)"></div>
-                        <div style="width:6px;height:40%;background:#4ade80;border-radius:2px;box-shadow:0 0 8px rgba(74,222,128,0.4)"></div>
-                        <div style="width:6px;height:80%;background:#4ade80;border-radius:2px;box-shadow:0 0 8px rgba(74,222,128,0.4)"></div>
+                        <div style="width:6px;height:60%;background:#fba319;border-radius:2px;box-shadow:0 0 8px rgba(251,163,25,0.4)"></div>
+                        <div style="width:6px;height:100%;background:#fba319;border-radius:2px;box-shadow:0 0 8px rgba(251,163,25,0.4)"></div>
+                        <div style="width:6px;height:40%;background:#fba319;border-radius:2px;box-shadow:0 0 8px rgba(251,163,25,0.4)"></div>
+                        <div style="width:6px;height:80%;background:#fba319;border-radius:2px;box-shadow:0 0 8px rgba(251,163,25,0.4)"></div>
                     </div>
                 </div>
                 <div class="stat-card stat-card-light animate-in" style="animation-delay:.2s">
@@ -77,10 +78,10 @@
                         <div class="stat-sub" id="s-sks-info">Mata kuliah tersedia</div>
                     </div>
                     <div style="display:flex;align-items:flex-end;gap:4px;height:40px;opacity:0.8">
-                        <div style="width:6px;height:80%;background:#22c55e;border-radius:2px"></div>
-                        <div style="width:6px;height:50%;background:#86efac;border-radius:2px"></div>
-                        <div style="width:6px;height:100%;background:#22c55e;border-radius:2px"></div>
-                        <div style="width:6px;height:60%;background:#22c55e;border-radius:2px"></div>
+                        <div style="width:6px;height:80%;background:#0ea5e9;border-radius:2px"></div>
+                        <div style="width:6px;height:50%;background:#7dd3fc;border-radius:2px"></div>
+                        <div style="width:6px;height:100%;background:#0ea5e9;border-radius:2px"></div>
+                        <div style="width:6px;height:60%;background:#0ea5e9;border-radius:2px"></div>
                     </div>
                 </div>
             </div>
@@ -101,16 +102,16 @@
                 </div>
 
                 <!-- Summary Card: SKS & Quick Info -->
-                <div class="card summary-card-green animate-in" style="animation-delay:.4s">
+                <div class="card summary-card-blue animate-in" style="animation-delay:.4s">
                     <div class="card-body" style="display:flex;flex-direction:column;justify-content:center;height:100%">
                         <div class="summary-big-number" id="summary-total-sks">0 <span>SKS</span></div>
-                        <div class="stat-sub" style="margin-top:8px;margin-bottom:24px;color:#059669;font-weight:600">
-                            <span class="stat-trend-up" style="color:#059669">↗</span> Total beban studi tersedia
+                        <div class="stat-sub" style="margin-top:8px;margin-bottom:24px;color:#0284c7;font-weight:600">
+                            <span class="stat-trend-up" style="color:#0284c7">↗</span> Total beban studi tersedia
                         </div>
 
                         <div id="summary-metrics" style="background:rgba(255,255,255,.5);border-radius:16px;padding:16px">
                             <div class="summary-metric" style="border-bottom:1px solid rgba(0,0,0,.05)">
-                                <span class="summary-metric-dot" style="background:#22c55e"></span>
+                                <span class="summary-metric-dot" style="background:#0ea5e9"></span>
                                 <span class="summary-metric-label">Rata-rata SKS / MK</span>
                                 <span class="summary-metric-value" id="summary-avg-sks">–</span>
                             </div>
@@ -236,9 +237,137 @@
                     </div>
                 </div>
             </div>
-        </div><!-- /page-content -->
+        
+</div>
+
+<div id="dashboard-mahasiswa" style="display: none;">
+    <div class="page-header" style="margin-bottom: 24px;">
+        <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Dashboard Mahasiswa</h1>
+    </div>
+    <div class="stats-grid">
+        <div class="stat-card stat-card-dark animate-in" style="animation-delay:.1s">
+            <div class="stat-info" style="flex:1">
+                <div class="stat-label" style="color:#94a3b8;">Total IPK</div>
+                <div class="stat-value" id="mhs-ipk" style="color:#ffffff !important;">–</div>
+                <div class="stat-sub" style="color:#94a3b8;">Akumulasi seluruh semester</div>
+            </div>
+            <div class="stat-icon" style="color:#fba319">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+            </div>
+        </div>
+        <div class="stat-card stat-card-light animate-in" style="animation-delay:.2s">
+            <div class="stat-info" style="flex:1">
+                <div class="stat-label">SKS Ditempuh</div>
+                <div class="stat-value" id="mhs-sks">–</div>
+                <div class="stat-sub">Total SKS lulus</div>
+            </div>
+            <div class="stat-icon" style="color:#10b981">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            </div>
+        </div>
+        <div class="stat-card stat-card-light animate-in" style="animation-delay:.3s">
+            <div class="stat-info" style="flex:1">
+                <div class="stat-label">Mata Kuliah Aktif</div>
+                <div class="stat-value" id="mhs-mk">–</div>
+                <div class="stat-sub">Semester ini</div>
+            </div>
+            <div class="stat-icon" style="color:#f59e0b">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+        </div>
+    </div>
+    
+    <div class="analytics-grid">
+        <div class="card animate-in" style="animation-delay:.35s">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div class="chart-title">Riwayat IP per Semester</div>
+                </div>
+                <div class="chart-canvas-wrap">
+                    <canvas id="chart-ip-mhs"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="card animate-in" style="animation-delay:.4s">
+            <div class="card-header">Jadwal Kuliah Terdekat</div>
+            <div class="card-body" style="padding:0">
+                <table class="dist-table">
+                    <thead><tr><th>Hari</th><th>Mata Kuliah</th><th>Jam</th><th>Ruangan</th></tr></thead>
+                    <tbody id="mhs-jadwal">
+                        <tr><td colspan="4" class="empty-state"><p>Memuat...</p></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dashboard-dosen" style="display: none;">
+    <div class="page-header" style="margin-bottom: 24px;">
+        <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Dashboard Dosen</h1>
+    </div>
+    <div class="stats-grid">
+        <div class="stat-card stat-card-dark animate-in" style="animation-delay:.1s">
+            <div class="stat-info" style="flex:1">
+                <div class="stat-label" style="color:#94a3b8;">Mata Kuliah Diampu</div>
+                <div class="stat-value" id="dsn-mk" style="color:#ffffff !important;">–</div>
+                <div class="stat-sub" style="color:#94a3b8;">Semester ini</div>
+            </div>
+            <div class="stat-icon" style="color:#0ea5e9">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </div>
+        </div>
+        <div class="stat-card stat-card-light animate-in" style="animation-delay:.2s">
+            <div class="stat-info" style="flex:1">
+                <div class="stat-label">Total Mahasiswa Diajar</div>
+                <div class="stat-value" id="dsn-mhs">–</div>
+                <div class="stat-sub" id="dsn-mhs-sub">Dari kelas aktif</div>
+            </div>
+            <div class="stat-icon" style="color:#10b981">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+        </div>
+        <div class="stat-card stat-card-light animate-in" style="animation-delay:.3s">
+            <div class="stat-info" style="flex:1">
+                <div class="stat-label">SKS Beban Mengajar</div>
+                <div class="stat-value" id="dsn-sks">–</div>
+                <div class="stat-sub">Total SKS semester ini</div>
+            </div>
+            <div class="stat-icon" style="color:#f59e0b">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+        </div>
+    </div>
+    
+    <div class="analytics-grid">
+        <div class="card animate-in" style="animation-delay:.35s">
+            <div class="card-header">Jadwal Mengajar Hari Ini</div>
+            <div class="card-body" style="padding:0">
+                <table class="dist-table">
+                    <thead><tr><th>Hari</th><th>Mata Kuliah</th><th>Kelas</th><th>Jam</th><th>Ruangan</th></tr></thead>
+                    <tbody id="dsn-jadwal">
+                        <tr><td colspan="4" class="empty-state"><p>Memuat...</p></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card animate-in" style="animation-delay:.4s">
+            <div class="card-header">Status Input Nilai & Absensi</div>
+            <div class="card-body" style="padding:0">
+                <table class="dist-table">
+                    <thead><tr><th>Mata Kuliah</th><th>Status</th></tr></thead>
+                    <tbody id="dsn-nilai">
+                        <tr><td colspan="2" class="empty-state"><p>Memuat...</p></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div><!-- /page-content -->
     </div><!-- /main-content -->
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="../assets/js/icons.js"></script>
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
@@ -250,105 +379,177 @@
 
         const DIST_COLORS = ['#fba319','#ea9412','#d4830b','#bc7305','#fbc455','#fbaf2f','#db8e0d','#ba7708','#fcd378','#fce2a3'];
 
-        async function loadDashboard() {
+        
+        const user = Auth.getUser();
+
+        if (user.role === 'ADMIN') {
+            document.getElementById('dashboard-admin').style.display = 'block';
+            loadDashboardAdmin();
+        } else if (user.role === 'MAHASISWA') {
+            document.getElementById('dashboard-mahasiswa').style.display = 'block';
+            loadDashboardMahasiswa();
+        } else if (user.role === 'DOSEN') {
+            document.getElementById('dashboard-dosen').style.display = 'block';
+            loadDashboardDosen();
+        }
+
+        
+        function renderDistTable(tbodyId, items, labelKey, badgeId, totalKey) {
+            const tbody = document.getElementById(tbodyId);
+            const badge = document.getElementById(badgeId);
+            if (!tbody || !items?.length) return;
+            const total = items.reduce((s, i) => s + parseInt(i[totalKey] || i.count), 0);
+            if (badge) badge.textContent = total;
+            tbody.innerHTML = items.map((item, idx) => {
+                const cnt = parseInt(item[totalKey] || item.count);
+                const pct = total > 0 ? Math.round((cnt / total) * 100) : 0;
+                const color = DIST_COLORS[idx % DIST_COLORS.length];
+                return `<tr><td>${item[labelKey]}</td><td>${cnt}</td>
+                    <td><div class="progress-bar"><div class="progress" style="width:${pct}%;background:${color}"></div></div></td>
+                    <td>${pct}%</td></tr>`;
+            }).join('');
+        }
+
+        async function loadDashboardAdmin() {
             const res = await API.get('/dashboard');
             if (!res.ok) { Toast.error(res.message); return; }
             const d = res.data;
-            const { stats, latest_mahasiswa, latest_dosen, latest_kuliah } = d;
 
-            // ─── Stat Cards ───
-            animateCount('s-mhs', stats.total_mahasiswa);
-            animateCount('s-dsn', stats.total_dosen);
-            animateCount('s-mk', stats.total_kuliah);
+            animateCount('s-mhs', d.stats.total_mahasiswa);
+            animateCount('s-dsn', d.stats.total_dosen);
+            animateCount('s-mk', d.stats.total_kuliah);
 
-            // SKS info
-            if (d.total_sks !== undefined) {
-                document.getElementById('s-sks-info').innerHTML =
-                    `${d.total_sks} total SKS tersedia`;
+            document.getElementById('summary-total-sks').innerHTML = `${d.total_sks} <span>SKS</span>`;
+            document.getElementById('summary-total-mk').textContent = d.stats.total_kuliah;
+            document.getElementById('summary-avg-sks').textContent = d.avg_sks.toFixed(1);
+            document.getElementById('summary-total-dsn').textContent = d.stats.total_dosen;
+            document.getElementById('badge-total-mhs').textContent = d.stats.total_mahasiswa;
+            document.getElementById('badge-total-semester').textContent = d.stats.total_kuliah;
+            document.getElementById('chart-badge-jurusan').textContent = d.jurusan_distribution.length + ' jurusan';
+
+            setTimeout(() => {
+                DashboardCharts.barChart('chart-jurusan',
+                    d.jurusan_distribution.map(j => ({ label: j.jurusan, value: parseInt(j.count) })));
+            }, 100);
+
+            renderDistTable('dist-jurusan', d.jurusan_distribution, 'jurusan', 'badge-total-mhs', 'count');
+            renderDistTable('dist-semester', d.semester_distribution.map(s => ({
+                semester: 'Semester ' + s.semester, count: s.count
+            })), 'semester', 'badge-total-semester', 'count');
+
+            const tblMhs = document.getElementById('tbl-mhs');
+            if (tblMhs) {
+                tblMhs.innerHTML = d.latest_mahasiswa.map(m =>
+                    `<tr><td><span class="badge badge-blue">${m.nim}</span></td><td>${m.nama}</td><td>${m.jurusan || '-'}</td></tr>`
+                ).join('') || '<tr><td colspan="3" class="empty-state"><p>Belum ada data</p></td></tr>';
             }
 
-            // ─── Summary Card ───
-            if (d.total_sks !== undefined) {
-                animateCount('summary-total-sks', d.total_sks, ' <span>SKS</span>');
-                document.getElementById('summary-avg-sks').textContent = d.avg_sks + ' SKS';
+            const tblDsn = document.getElementById('tbl-dsn');
+            if (tblDsn) {
+                tblDsn.innerHTML = d.latest_dosen.map(ds =>
+                    `<tr><td><small>${ds.nip}</small></td><td>${ds.nama}</td></tr>`
+                ).join('') || '<tr><td colspan="2" class="empty-state"><p>Belum ada data</p></td></tr>';
             }
-            document.getElementById('summary-total-mk').textContent = stats.total_kuliah;
-            document.getElementById('summary-total-dsn').textContent = stats.total_dosen;
-
-            // ─── Bar Chart: Jurusan Distribution ───
-            if (d.jurusan_distribution && d.jurusan_distribution.length) {
-                const chartData = d.jurusan_distribution.map(j => ({
-                    label: j.jurusan || 'N/A',
-                    value: parseInt(j.count)
-                }));
-                document.getElementById('chart-badge-jurusan').textContent = chartData.length + ' jurusan';
-                setTimeout(() => DashboardCharts.barChart('chart-jurusan', chartData), 300);
-            }
-
-            // ─── Distribution Table: Jurusan ───
-            if (d.jurusan_distribution && d.jurusan_distribution.length) {
-                const totalMhs = d.jurusan_distribution.reduce((s, j) => s + parseInt(j.count), 0);
-                const maxCount = Math.max(...d.jurusan_distribution.map(j => parseInt(j.count)));
-                document.getElementById('badge-total-mhs').textContent = totalMhs + ' total';
-                document.getElementById('dist-jurusan').innerHTML = d.jurusan_distribution.map((j, i) => {
-                    const pct = totalMhs ? Math.round(parseInt(j.count) / totalMhs * 100) : 0;
-                    const barPct = maxCount ? Math.round(parseInt(j.count) / maxCount * 100) : 0;
-                    const color = DIST_COLORS[i % DIST_COLORS.length];
-                    return `<tr>
-                        <td><span class="dist-flag"><span class="dist-dot" style="background:${color}"></span>${j.jurusan || 'N/A'}</span></td>
-                        <td><strong>${j.count}</strong></td>
-                        <td><div class="dist-bar-wrap"><div class="dist-bar" style="width:${barPct}%;background:${color}"></div></div></td>
-                        <td>${pct}%</td>
-                    </tr>`;
-                }).join('');
-            } else {
-                document.getElementById('dist-jurusan').innerHTML =
-                    '<tr><td colspan="4" class="empty-state"><p>Belum ada data</p></td></tr>';
-            }
-
-            // ─── Distribution Table: Semester ───
-            if (d.semester_distribution && d.semester_distribution.length) {
-                const totalSem = d.semester_distribution.reduce((s, sm) => s + parseInt(sm.count), 0);
-                const maxSem = Math.max(...d.semester_distribution.map(sm => parseInt(sm.count)));
-                document.getElementById('badge-total-semester').textContent = d.semester_distribution.length + ' semester';
-                document.getElementById('dist-semester').innerHTML = d.semester_distribution.map((sm, i) => {
-                    const pct = totalSem ? Math.round(parseInt(sm.count) / totalSem * 100) : 0;
-                    const barPct = maxSem ? Math.round(parseInt(sm.count) / maxSem * 100) : 0;
-                    const color = DIST_COLORS[i % DIST_COLORS.length];
-                    return `<tr>
-                        <td><span class="dist-flag"><span class="dist-dot" style="background:${color}"></span>Semester ${sm.semester}</span></td>
-                        <td><strong>${sm.count}</strong></td>
-                        <td><div class="dist-bar-wrap"><div class="dist-bar" style="width:${barPct}%;background:${color}"></div></div></td>
-                        <td>${pct}%</td>
-                    </tr>`;
-                }).join('');
-            } else {
-                document.getElementById('dist-semester').innerHTML =
-                    '<tr><td colspan="4" class="empty-state"><p>Belum ada data</p></td></tr>';
-            }
-
-            // ─── Latest Tables ───
-            document.getElementById('tbl-mhs').innerHTML = latest_mahasiswa.length
-                ? latest_mahasiswa.map(m => `<tr><td><span class="badge badge-blue">${m.nim}</span></td><td>${m.nama}</td><td>${m.jurusan || '-'}</td></tr>`).join('')
-                : '<tr><td colspan="3" class="empty-state"><p>Belum ada data</p></td></tr>';
-
-            document.getElementById('tbl-dsn').innerHTML = latest_dosen.length
-                ? latest_dosen.map(d => `<tr><td><small>${d.nip}</small></td><td>${d.nama}</td></tr>`).join('')
-                : '<tr><td colspan="2" class="empty-state"><p>Belum ada data</p></td></tr>';
-
-            document.getElementById('tbl-mk').innerHTML = latest_kuliah.length
-                ? latest_kuliah.map(k => `<tr><td><span class="badge badge-amber">${k.kode_mk}</span></td><td>${k.nama_mk}</td><td>${k.nama_dosen || '-'}</td></tr>`).join('')
-                : '<tr><td colspan="3" class="empty-state"><p>Belum ada data</p></td></tr>';
         }
 
-        /** Animated number counter */
+        async function loadDashboardMahasiswa() {
+            const res = await API.get('/dashboard');
+            if (!res.ok) { Toast.error(res.message); return; }
+            const d = res.data;
+
+            document.getElementById('mhs-ipk').textContent = (d.ipk ?? 0).toFixed(2);
+            document.getElementById('mhs-sks').textContent = d.sks_lulus ?? 0;
+            document.getElementById('mhs-mk').textContent = d.mk_aktif ?? 0;
+
+            const jTable = document.getElementById('mhs-jadwal');
+            if (d.jadwal?.length > 0) {
+                jTable.innerHTML = d.jadwal.map(j =>
+                    `<tr><td><span class="badge badge-blue" style="font-size:11px">${j.hari}</span></td><td>${j.nama}</td><td>${j.jam}</td><td>${j.ruang}</td></tr>`
+                ).join('');
+            } else {
+                jTable.innerHTML = '<tr><td colspan="4" class="empty-state"><p>Tidak ada jadwal terdekat</p></td></tr>';
+            }
+
+            const history = d.ips_history || [];
+            // Gunakan riwayat asli dari backend tanpa membuat semester palsu tambahan
+            const ipData = history.map(h => {
+                const label = h.semester == d.mk_aktif ? `Sem ${h.semester} ★` : `Sem ${h.semester}`;
+                return { label: `Sem ${h.semester}`, value: parseFloat(h.ips) };
+            });
+
+            setTimeout(() => {
+                const ctx = document.getElementById('chart-ip-mhs');
+                if (ctx && ipData.length) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ipData.map(x => x.label),
+                            datasets: [{
+                                label: 'IP Semester',
+                                data: ipData.map(x => x.value),
+                                borderColor: '#0ea5e9',
+                                backgroundColor: 'rgba(14,165,233,0.1)',
+                                borderWidth: 2.5, fill: true, tension: 0.4,
+                                pointBackgroundColor: '#0ea5e9',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: { min: 0, max: 4, ticks: { stepSize: 0.5 },
+                                     grid: { color: 'rgba(0,0,0,0.05)' } },
+                                x: { grid: { display: false } }
+                            }
+                        }
+                    });
+                } else if (ctx) {
+                    ctx.parentElement.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">Belum ada riwayat IP</p>';
+                }
+            }, 100);
+        }
+
+        async function loadDashboardDosen() {
+            const res = await API.get('/dashboard');
+            if (!res.ok) { Toast.error(res.message); return; }
+            const d = res.data;
+
+            document.getElementById('dsn-mk').textContent = d.mk_count ?? 0;
+            document.getElementById('dsn-mhs').textContent = d.mhs_count ?? 0;
+            document.getElementById('dsn-sks').textContent = d.sks_beban ?? 0;
+            const dsnMhsSub = document.getElementById('dsn-mhs-sub');
+            if (dsnMhsSub) dsnMhsSub.textContent = `Dari ${d.mk_count ?? 0} kelas aktif`;
+
+            const jTable = document.getElementById('dsn-jadwal');
+            if (d.jadwal?.length > 0) {
+                jTable.innerHTML = d.jadwal.map(j =>
+                    `<tr><td><span class="badge badge-blue" style="font-size:11px">${j.hari}</span></td><td>${j.nama}</td><td><span class="badge badge-blue">${j.kelas}</span></td><td>${j.jam}</td><td>${j.ruang}</td></tr>`
+                ).join('');
+            } else {
+                jTable.innerHTML = '<tr><td colspan="5" class="empty-state"><p>Tidak ada jadwal hari ini</p></td></tr>';
+            }
+
+            const nTable = document.getElementById('dsn-nilai');
+            if (d.nilai_status?.length > 0) {
+                nTable.innerHTML = d.nilai_status.map(n => {
+                    const cls = n.status === 'Lengkap' ? 'badge-blue' : 'badge-amber';
+                    return `<tr><td>${n.nama_mk}</td><td><span class="badge ${cls}">${n.status}</span></td></tr>`;
+                }).join('');
+            } else {
+                nTable.innerHTML = '<tr><td colspan="2" class="empty-state"><p>Tidak ada kelas</p></td></tr>';
+            }
+        }
+
         function animateCount(elId, target, suffix = '') {
             const el = document.getElementById(elId);
             if (!el) return;
             const duration = 1200;
             const start = performance.now();
             const from = 0;
-
             function update(now) {
                 const elapsed = now - start;
                 const progress = Math.min(elapsed / duration, 1);
@@ -359,9 +560,7 @@
             }
             requestAnimationFrame(update);
         }
-
-        loadDashboard();
-    </script>
+        </script>
 </body>
 
 </html>
