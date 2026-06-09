@@ -26,7 +26,7 @@
                 <span id="page-title" class="page-title">Dashboard</span>
             </div>
             <div class="topbar-right" style="gap: 16px;">
-                <button class="btn-icon" style="background:#fff;border:1px solid var(--border);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#64748b;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+                <button class="btn-icon" style="background: var(--surface);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#64748b;box-shadow:0 2px 8px rgba(0,0,0,.05)">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                 </button>
                 <span id="topbar-user" class="topbar-user"></span>
@@ -41,7 +41,7 @@
                 <div class="stat-card stat-card-dark animate-in" style="animation-delay:.1s">
                     <div class="stat-info" style="flex:1">
                         <div class="stat-label" style="color:#94a3b8;">Total Mahasiswa</div>
-                        <div class="stat-value" id="s-mhs" style="color:#ffffff !important;">–</div>
+                        <div class="stat-value" id="s-mhs" style="color: var(--text-bright) !important;">–</div>
                         <div class="stat-sub" style="color:#94a3b8;">
                             <span class="stat-trend-up" id="s-mhs-trend"></span>
                             Mahasiswa terdaftar
@@ -78,10 +78,10 @@
                         <div class="stat-sub" id="s-sks-info">Mata kuliah tersedia</div>
                     </div>
                     <div style="display:flex;align-items:flex-end;gap:4px;height:40px;opacity:0.8">
-                        <div style="width:6px;height:80%;background:#0ea5e9;border-radius:2px"></div>
+                        <div style="width:6px;height:80%;background:#8b5cf6;border-radius:2px"></div>
                         <div style="width:6px;height:50%;background:#7dd3fc;border-radius:2px"></div>
-                        <div style="width:6px;height:100%;background:#0ea5e9;border-radius:2px"></div>
-                        <div style="width:6px;height:60%;background:#0ea5e9;border-radius:2px"></div>
+                        <div style="width:6px;height:100%;background:#8b5cf6;border-radius:2px"></div>
+                        <div style="width:6px;height:60%;background:#8b5cf6;border-radius:2px"></div>
                     </div>
                 </div>
             </div>
@@ -105,13 +105,13 @@
                 <div class="card summary-card-blue animate-in" style="animation-delay:.4s">
                     <div class="card-body" style="display:flex;flex-direction:column;justify-content:center;height:100%">
                         <div class="summary-big-number" id="summary-total-sks">0 <span>SKS</span></div>
-                        <div class="stat-sub" style="margin-top:8px;margin-bottom:24px;color:#0284c7;font-weight:600">
-                            <span class="stat-trend-up" style="color:#0284c7">↗</span> Total beban studi tersedia
+                        <div class="stat-sub" style="margin-top:8px;margin-bottom:24px;color:#7c3aed;font-weight:600">
+                            <span class="stat-trend-up" style="color:#7c3aed">↗</span> Total beban studi tersedia
                         </div>
 
                         <div id="summary-metrics" style="background:rgba(255,255,255,.5);border-radius:16px;padding:16px">
                             <div class="summary-metric" style="border-bottom:1px solid rgba(0,0,0,.05)">
-                                <span class="summary-metric-dot" style="background:#0ea5e9"></span>
+                                <span class="summary-metric-dot" style="background:#8b5cf6"></span>
                                 <span class="summary-metric-label">Rata-rata SKS / MK</span>
                                 <span class="summary-metric-value" id="summary-avg-sks">–</span>
                             </div>
@@ -207,7 +207,7 @@
                         </table>
                     </div>
                     <div style="padding:12px 16px;border-top:1px solid var(--border)">
-                        <a href="mahasiswa.html" class="btn btn-secondary btn-sm" style="background:#f1f5f9;border:none">View All Regions ▾</a>
+                        <a href="mahasiswa.html" class="btn btn-secondary btn-sm" style="background: var(--surface-2);border:none">View All Regions ▾</a>
                     </div>
                 </div>
                 <!-- Dosen Terbaru -->
@@ -233,7 +233,7 @@
                         </table>
                     </div>
                     <div style="padding:12px 16px;border-top:1px solid var(--border)">
-                        <a href="dosen.html" class="btn btn-secondary btn-sm" style="background:#f1f5f9;border:none">Lihat Semua →</a>
+                        <a href="dosen.html" class="btn btn-secondary btn-sm" style="background: var(--surface-2);border:none">Lihat Semua →</a>
                     </div>
                 </div>
             </div>
@@ -248,7 +248,7 @@
         <div class="stat-card stat-card-dark animate-in" style="animation-delay:.1s">
             <div class="stat-info" style="flex:1">
                 <div class="stat-label" style="color:#94a3b8;">Total IPK</div>
-                <div class="stat-value" id="mhs-ipk" style="color:#ffffff !important;">–</div>
+                <div class="stat-value" id="mhs-ipk" style="color: var(--text-bright) !important;">–</div>
                 <div class="stat-sub" style="color:#94a3b8;">Akumulasi seluruh semester</div>
             </div>
             <div class="stat-icon" style="color:#fba319">
@@ -310,10 +310,10 @@
         <div class="stat-card stat-card-dark animate-in" style="animation-delay:.1s">
             <div class="stat-info" style="flex:1">
                 <div class="stat-label" style="color:#94a3b8;">Mata Kuliah Diampu</div>
-                <div class="stat-value" id="dsn-mk" style="color:#ffffff !important;">–</div>
+                <div class="stat-value" id="dsn-mk" style="color: var(--text-bright) !important;">–</div>
                 <div class="stat-sub" style="color:#94a3b8;">Semester ini</div>
             </div>
-            <div class="stat-icon" style="color:#0ea5e9">
+            <div class="stat-icon" style="color:#8b5cf6">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
             </div>
         </div>
@@ -487,11 +487,11 @@
                             datasets: [{
                                 label: 'IP Semester',
                                 data: ipData.map(x => x.value),
-                                borderColor: '#0ea5e9',
-                                backgroundColor: 'rgba(14,165,233,0.1)',
+                                borderColor: '#8b5cf6',
+                                backgroundColor: 'rgba(139,92,246,0.1)',
                                 borderWidth: 2.5, fill: true, tension: 0.4,
-                                pointBackgroundColor: '#0ea5e9',
-                                pointBorderColor: '#fff',
+                                pointBackgroundColor: '#8b5cf6',
+                                pointBorderColor: '#13131c',
                                 pointBorderWidth: 2,
                                 pointRadius: 5,
                                 pointHoverRadius: 7,
@@ -501,9 +501,9 @@
                             responsive: true, maintainAspectRatio: false,
                             plugins: { legend: { display: false } },
                             scales: {
-                                y: { min: 0, max: 4, ticks: { stepSize: 0.5 },
-                                     grid: { color: 'rgba(0,0,0,0.05)' } },
-                                x: { grid: { display: false } }
+                                y: { min: 0, max: 4, ticks: { stepSize: 0.5, color: 'rgba(255,255,255,0.5)' },
+                                     grid: { color: 'rgba(255,255,255,0.05)' } },
+                                x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)' } }
                             }
                         }
                     });

@@ -35,15 +35,15 @@ const DashboardCharts = {
     const gap = Math.min(16, chartW / barCount * 0.3);
     const barW = Math.max(12, (chartW - gap * (barCount + 1)) / barCount);
 
-    // Colors
+    // Colors (Purple and Orange)
     const colors = opts.colors || [
-      '#fba319', '#ea9412', '#d4830b', '#bc7305',
-      '#fbc455', '#fbaf2f', '#db8e0d', '#ba7708',
-      '#fcd378', '#fce2a3'
+      '#8b5cf6', '#7c3aed', '#f97316', '#ea580c',
+      '#a855f7', '#9333ea', '#fb923c', '#f59e0b',
+      '#6d28d9', '#c2410c'
     ];
-    const gridColor = 'rgba(0,0,0,0.06)';
-    const textColor = 'rgba(0,0,0,0.4)';
-    const labelColor = 'rgba(0,0,0,0.6)';
+    const gridColor = 'rgba(255,255,255,0.08)';
+    const textColor = 'rgba(255,255,255,0.5)';
+    const labelColor = 'rgba(255,255,255,0.7)';
 
     // Grid lines
     const gridSteps = 5;
@@ -184,7 +184,7 @@ const DashboardCharts = {
         // Value label on top
         if (ease > 0.8) {
           ctx.save();
-          ctx.fillStyle = 'rgba(0,0,0,0.7)';
+          ctx.fillStyle = 'rgba(255,255,255,0.8)';
           ctx.font = 'bold 12px Inter, sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'bottom';
@@ -262,8 +262,8 @@ const DashboardCharts = {
     const total = data.reduce((s, d) => s + d.value, 0);
 
     const colors = opts.colors || [
-      '#fba319', '#ea9412', '#d4830b', '#bc7305',
-      '#fbc455', '#fbaf2f', '#db8e0d'
+      '#8b5cf6', '#7c3aed', '#f97316', '#ea580c',
+      '#a855f7', '#fb923c', '#6d28d9'
     ];
 
     let startAngle = -Math.PI / 2;
