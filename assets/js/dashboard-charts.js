@@ -35,11 +35,11 @@ const DashboardCharts = {
     const gap = Math.min(16, chartW / barCount * 0.3);
     const barW = Math.max(12, (chartW - gap * (barCount + 1)) / barCount);
 
-    // Colors (Purple and Orange)
+    // Colors (Green and Orange)
     const colors = opts.colors || [
-      '#8b5cf6', '#7c3aed', '#f97316', '#ea580c',
-      '#a855f7', '#9333ea', '#fb923c', '#f59e0b',
-      '#6d28d9', '#c2410c'
+      '#10b981', '#059669', '#f97316', '#ea580c',
+      '#34d399', '#047857', '#fb923c', '#f59e0b',
+      '#059669', '#c2410c'
     ];
     const gridColor = 'rgba(0,0,0,0.06)';
     const textColor = 'rgba(0,0,0,0.4)';
@@ -262,8 +262,8 @@ const DashboardCharts = {
     const total = data.reduce((s, d) => s + d.value, 0);
 
     const colors = opts.colors || [
-      '#8b5cf6', '#7c3aed', '#f97316', '#ea580c',
-      '#a855f7', '#fb923c', '#6d28d9'
+      '#10b981', '#059669', '#f97316', '#ea580c',
+      '#34d399', '#fb923c', '#047857'
     ];
 
     let startAngle = -Math.PI / 2;
