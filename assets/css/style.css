@@ -254,7 +254,7 @@ body::before {
 
 /* Topbar */
 .topbar {
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  background: var(--bg-elevated);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   padding: 0 28px;
@@ -266,13 +266,13 @@ body::before {
 .topbar-left { display: flex; align-items: center; gap: 14px; }
 .btn-menu-toggle {
   background: none; padding: 8px; border-radius: 8px;
-  color: #fff; display: flex; align-items: center;
+  color: var(--text-muted); display: flex; align-items: center;
   transition: all var(--transition);
 }
-.btn-menu-toggle:hover { background: rgba(255,255,255,.15); color: #fff; }
+.btn-menu-toggle:hover { background: var(--surface-2); color: var(--text-bright); }
 .page-title {
   font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700;
-  color: #fff;
+  color: var(--text-bright);
   letter-spacing: -.3px;
 }
 .topbar-right { display: flex; align-items: center; gap: 12px; }
