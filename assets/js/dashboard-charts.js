@@ -41,9 +41,9 @@ const DashboardCharts = {
       '#a855f7', '#9333ea', '#fb923c', '#f59e0b',
       '#6d28d9', '#c2410c'
     ];
-    const gridColor = 'rgba(255,255,255,0.08)';
-    const textColor = 'rgba(255,255,255,0.5)';
-    const labelColor = 'rgba(255,255,255,0.7)';
+    const gridColor = 'rgba(0,0,0,0.06)';
+    const textColor = 'rgba(0,0,0,0.4)';
+    const labelColor = 'rgba(0,0,0,0.6)';
 
     // Grid lines
     const gridSteps = 5;
@@ -184,7 +184,7 @@ const DashboardCharts = {
         // Value label on top
         if (ease > 0.8) {
           ctx.save();
-          ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          ctx.fillStyle = 'rgba(0,0,0,0.7)';
           ctx.font = 'bold 12px Inter, sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'bottom';

@@ -21,7 +21,7 @@
             border-radius: var(--radius-sm);
             border: 1px solid var(--border);
             background: var(--surface-2);
-            color: var(--text-bright);
+            color: #fff;
             font-size: 14px;
             min-width: 280px;
         }
@@ -52,7 +52,7 @@
         }
         td {
             font-size: 14px;
-            color: var(--text-bright);
+            color: #fff;
         }
         tr:last-child td { border-bottom: none; }
         
@@ -62,7 +62,7 @@
             border: 1px solid var(--border);
             border-radius: 4px;
             background: var(--input-bg);
-            color: var(--text-bright);
+            color: #fff;
             text-align: center;
             font-size: 13px;
             transition: all 0.2s;
@@ -112,12 +112,12 @@
         
         <div class="page-content">
             <div class="page-header" style="margin-bottom: 20px;">
-                <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Input Nilai Mahasiswa</h1>
+                <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: #fff;">Input Nilai Mahasiswa</h1>
                 <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">Masukkan komponen nilai dan persentase absensi untuk kelas yang Anda ampu.</p>
             </div>
 
             <div class="class-selector">
-                <span style="font-weight:600; color:var(--text-bright)">Pilih Kelas:</span>
+                <span style="font-weight:600; color: #fff">Pilih Kelas:</span>
                 <select id="select-kelas" onchange="renderStudents()">
                     <option value="">Memuat kelas...</option>
                 </select>

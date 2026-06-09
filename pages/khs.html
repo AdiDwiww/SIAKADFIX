@@ -21,7 +21,7 @@
             border-radius: var(--radius-sm);
             border: 1px solid var(--border);
             background: var(--surface-2);
-            color: var(--text-bright);
+            color: #fff;
             font-size: 14px;
             min-width: 200px;
         }
@@ -35,7 +35,7 @@
             background: linear-gradient(135deg, #8b5cf6, #7c3aed);
             border-radius: var(--radius-lg);
             padding: 20px;
-            color: var(--text-bright);
+            color: #fff;
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(14,165,233,0.2);
@@ -87,7 +87,7 @@
         }
         td {
             font-size: 14px;
-            color: var(--text-bright);
+            color: #fff;
         }
         tr:last-child td { border-bottom: none; }
         .grade-a { color: #10b981; font-weight: 700; }
@@ -118,13 +118,13 @@
         <div class="page-content">
             <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
-                    <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Kartu Hasil Studi</h1>
+                    <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: #fff;">Kartu Hasil Studi</h1>
                     <p style="color: var(--text-muted); margin-top: 4px; font-size: 14px;">Lihat rincian nilai Anda setiap semester</p>
                 </div>
             </div>
 
             <div class="filter-bar">
-                <span style="font-weight:600; color:var(--text-bright)">Pilih Semester:</span>
+                <span style="font-weight:600; color: #fff">Pilih Semester:</span>
                 <select id="select-semester" onchange="renderKHS()">
                     <option value="all" selected>Semua (Transkrip Sementara)</option>
                     <!-- Options populated dynamically by JS -->

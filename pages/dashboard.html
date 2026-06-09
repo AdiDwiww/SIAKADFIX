@@ -41,7 +41,7 @@
                 <div class="stat-card stat-card-dark animate-in" style="animation-delay:.1s">
                     <div class="stat-info" style="flex:1">
                         <div class="stat-label" style="color:#94a3b8;">Total Mahasiswa</div>
-                        <div class="stat-value" id="s-mhs" style="color: var(--text-bright) !important;">–</div>
+                        <div class="stat-value" id="s-mhs" style="color: #fff !important;">–</div>
                         <div class="stat-sub" style="color:#94a3b8;">
                             <span class="stat-trend-up" id="s-mhs-trend"></span>
                             Mahasiswa terdaftar
@@ -242,13 +242,13 @@
 
 <div id="dashboard-mahasiswa" style="display: none;">
     <div class="page-header" style="margin-bottom: 24px;">
-        <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Dashboard Mahasiswa</h1>
+        <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: #fff;">Dashboard Mahasiswa</h1>
     </div>
     <div class="stats-grid">
         <div class="stat-card stat-card-dark animate-in" style="animation-delay:.1s">
             <div class="stat-info" style="flex:1">
                 <div class="stat-label" style="color:#94a3b8;">Total IPK</div>
-                <div class="stat-value" id="mhs-ipk" style="color: var(--text-bright) !important;">–</div>
+                <div class="stat-value" id="mhs-ipk" style="color: #fff !important;">–</div>
                 <div class="stat-sub" style="color:#94a3b8;">Akumulasi seluruh semester</div>
             </div>
             <div class="stat-icon" style="color:#fba319">
@@ -304,13 +304,13 @@
 
 <div id="dashboard-dosen" style="display: none;">
     <div class="page-header" style="margin-bottom: 24px;">
-        <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: var(--text-bright);">Dashboard Dosen</h1>
+        <h1 style="font-weight: 800; letter-spacing: 0.5px; font-size: 24px; color: #fff;">Dashboard Dosen</h1>
     </div>
     <div class="stats-grid">
         <div class="stat-card stat-card-dark animate-in" style="animation-delay:.1s">
             <div class="stat-info" style="flex:1">
                 <div class="stat-label" style="color:#94a3b8;">Mata Kuliah Diampu</div>
-                <div class="stat-value" id="dsn-mk" style="color: var(--text-bright) !important;">–</div>
+                <div class="stat-value" id="dsn-mk" style="color: #fff !important;">–</div>
                 <div class="stat-sub" style="color:#94a3b8;">Semester ini</div>
             </div>
             <div class="stat-icon" style="color:#8b5cf6">
@@ -491,7 +491,7 @@
                                 backgroundColor: 'rgba(139,92,246,0.1)',
                                 borderWidth: 2.5, fill: true, tension: 0.4,
                                 pointBackgroundColor: '#8b5cf6',
-                                pointBorderColor: '#13131c',
+                                pointBorderColor: '#fff',
                                 pointBorderWidth: 2,
                                 pointRadius: 5,
                                 pointHoverRadius: 7,
@@ -501,9 +501,9 @@
                             responsive: true, maintainAspectRatio: false,
                             plugins: { legend: { display: false } },
                             scales: {
-                                y: { min: 0, max: 4, ticks: { stepSize: 0.5, color: 'rgba(255,255,255,0.5)' },
-                                     grid: { color: 'rgba(255,255,255,0.05)' } },
-                                x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)' } }
+                                y: { min: 0, max: 4, ticks: { stepSize: 0.5 },
+                                     grid: { color: 'rgba(0,0,0,0.05)' } },
+                                x: { grid: { display: false } }
                             }
                         }
                     });

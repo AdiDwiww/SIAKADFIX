@@ -9,7 +9,7 @@
 
 :root {
   /* Core palette */
-  --sidebar-bg: #0a0a0f;
+  --sidebar-bg: #ffffff;
   --sidebar-w:   272px;
 
   /* Accent Purple */
@@ -26,27 +26,27 @@
   --info:        #8b5cf6;
 
   /* Backgrounds */
-  --bg:          #050508;
-  --bg-elevated: #0f0f16;
-  --surface:     #13131c;
-  --surface-2:   #1a1a26;
-  --surface-3:   #232333;
+  --bg:          #f0f4f8;
+  --bg-elevated: #ffffff;
+  --surface:     #ffffff;
+  --surface-2:   #f8fafc;
+  --surface-3:   #f1f5f9;
 
   /* Borders */
-  --border:      rgba(255,255,255,.08);
-  --border-subtle:rgba(255,255,255,.04);
+  --border:      rgba(0,0,0,.08);
+  --border-subtle:rgba(0,0,0,.04);
 
   /* Text */
-  --text:        #cbd5e1;
+  --text:        #334155;
   --text-muted:  #64748b;
-  --text-bright: #f8fafc;
+  --text-bright: #0f172a;
 
   /* Effects */
-  --shadow:      0 4px 20px rgba(0,0,0,.3);
-  --shadow-lg:   0 8px 30px rgba(0,0,0,.5);
+  --shadow:      0 2px 10px rgba(0,0,0,.04);
+  --shadow-lg:   0 4px 20px rgba(0,0,0,.08);
   --glow-blue:  0 0 30px rgba(139,92,246,.15);
-  --glass:       rgba(15,15,22,.8);
-  --glass-border:rgba(255,255,255,.08);
+  --glass:       rgba(255,255,255,.8);
+  --glass-border:rgba(0,0,0,.08);
 
   /* Radius */
   --radius:      14px;
