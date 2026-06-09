@@ -9,7 +9,7 @@
 
 :root {
   /* Core palette */
-  --sidebar-bg: linear-gradient(180deg, #022c22 0%, #064e3b 100%); /* Deep dark green glowing background */
+  --sidebar-bg: linear-gradient(180deg, #011812 0%, #022c22 100%); /* Ultra-dark premium emerald glow */
   --sidebar-w:   272px;
 
   /* Accent Green (Neon Glow) */
@@ -80,7 +80,7 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(139,92,246,.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 50%, rgba(16,185,129,.04) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 20%, rgba(249,115,22,.03) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
@@ -345,7 +345,7 @@ body::before {
 .student-page::before {
   top: -200px;
   right: -200px;
-  background: radial-gradient(circle, rgba(139,92,246,.5), transparent);
+  background: radial-gradient(circle, rgba(16,185,129,.5), transparent);
 }
 .clean-page::after,
 .student-page::after {
@@ -370,7 +370,7 @@ body::before {
 }
 .clean-card-header,
 .student-card-header {
-  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-3) 55%, rgba(139,92,246,.08) 100%);
+  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-3) 55%, rgba(16,185,129,.08) 100%);
 }
 .card-title {
   display: flex;
@@ -381,7 +381,7 @@ body::before {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: rgba(139,92,246,.12);
+  background: rgba(16,185,129,.12);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -422,9 +422,9 @@ body::before {
   transition: all var(--transition);
 }
 .search-wrap:focus-within {
-  border-color: rgba(139,92,246,.3);
+  border-color: rgba(16,185,129,.3);
   background: var(--surface-2);
-  box-shadow: 0 0 0 3px rgba(139,92,246,.06);
+  box-shadow: 0 0 0 3px rgba(16,185,129,.06);
 }
 .search-wrap svg { color: var(--text-muted); }
 .search-pill {
@@ -461,29 +461,32 @@ body::before {
 @media (max-width: 900px) { .stats-grid { grid-template-columns: 1fr; } }
 
 .stat-card {
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: var(--radius);
   padding: 22px 24px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+  border: 1px solid rgba(255,255,255,0.8);
   display: flex; align-items: center; gap: 18px;
   transition: all var(--transition);
   position: relative;
   overflow: hidden;
 }
 .stat-card-dark {
-  background: #0f172a;
-  border-color: #1e293b;
+  background: rgba(2, 44, 34, 0.85); /* Premium dark emerald glass */
+  border-color: rgba(16, 185, 129, 0.2);
+  box-shadow: 0 10px 40px rgba(2, 44, 34, 0.2);
   color: #f8fafc;
 }
 .stat-card-dark .stat-label, .stat-card-dark .stat-info .stat-label { color: #94a3b8; }
 .stat-card-dark .stat-value, .stat-card-dark .stat-info .stat-value { color: #ffffff; }
 .stat-card-dark .stat-sub, .stat-card-dark .stat-info .stat-sub { color: #94a3b8; }
-.stat-card-dark .stat-icon { background: rgba(139,92,246,.15); color: var(--accent); }
+.stat-card-dark .stat-icon { background: rgba(16,185,129,.15); color: var(--accent); }
 
 .stat-card-light {
-  background: var(--surface);
-  border-color: rgba(0,0,0,.08);
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 .stat-card-light .stat-icon { background: transparent; }
 .stat-card-light .stat-value { color: #0f172a; }
@@ -494,7 +497,7 @@ body::before {
   flex-shrink: 0;
 }
 .stat-icon.blue  { background: rgba(249,115,22,.1); color: var(--info); }
-.stat-icon.green { background: rgba(139,92,246,.1); color: var(--accent); }
+.stat-icon.green { background: rgba(16,185,129,.1); color: var(--accent); }
 .stat-icon.amber { background: rgba(234,179,8,.1); color: #eab308; }
 .stat-icon.cyan  { background: rgba(6,182,212,.1); color: #06b6d4; }
 
@@ -570,7 +573,7 @@ body::before {
   font-size: 11px;
   padding: 4px 10px;
   border-radius: 20px;
-  background: rgba(139,92,246,.1);
+  background: rgba(16,185,129,.1);
   color: var(--accent);
   font-weight: 600;
 }
@@ -681,12 +684,12 @@ body::before {
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   color: #ffffff;
-  box-shadow: 0 2px 12px rgba(139,92,246,.25);
+  box-shadow: 0 2px 12px rgba(16,185,129,.25);
 }
 .btn-primary:hover {
   background: linear-gradient(135deg, var(--accent-hover), var(--accent-hover));
   transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+  box-shadow: 0 4px 20px rgba(16,185,129,.35);
 }
 .btn-success  { background: var(--success);  color: var(--text-bright); }
 .btn-success:hover  { filter: brightness(1.1); }
@@ -710,7 +713,7 @@ body::before {
   transition: all var(--transition);
 }
 .btn-icon:hover { background: var(--surface-2); color: var(--text); }
-.btn-icon.edit:hover   { background: rgba(139,92,246,.1); color: var(--accent); }
+.btn-icon.edit:hover   { background: rgba(16,185,129,.1); color: var(--accent); }
 .btn-icon.detail:hover { background: rgba(249,115,22,.1); color: var(--info); }
 .btn-icon.del:hover    { background: rgba(239,68,68,.1);  color: var(--danger); }
 
@@ -729,8 +732,8 @@ body::before {
 }
 .search-input:focus {
   outline: none;
-  border-color: rgba(139,92,246,.3);
-  box-shadow: 0 0 0 3px rgba(139,92,246,.06);
+  border-color: rgba(16,185,129,.3);
+  box-shadow: 0 0 0 3px rgba(16,185,129,.06);
 }
 .search-input::placeholder { color: var(--text-muted); }
 .search-wrap .search-pill:focus { border-color: transparent; box-shadow: none; }
@@ -750,7 +753,7 @@ tbody tr {
   transition: background var(--transition);
 }
 tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: rgba(139,92,246,.03); }
+tbody tr:hover { background: rgba(16,185,129,.03); }
 tbody td {
   padding: 12px 14px; vertical-align: middle;
   color: var(--text);
@@ -791,13 +794,13 @@ input[type="checkbox"] {
   transition: all var(--transition);
 }
 .page-btn:hover {
-  border-color: rgba(139,92,246,.3); color: var(--accent);
-  background: rgba(139,92,246,.05);
+  border-color: rgba(16,185,129,.3); color: var(--accent);
+  background: rgba(16,185,129,.05);
 }
 .page-btn.active {
   background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   border-color: var(--accent); color: var(--text-bright);
-  box-shadow: 0 2px 10px rgba(139,92,246,.3);
+  box-shadow: 0 2px 10px rgba(16,185,129,.3);
 }
 .page-btn:disabled { opacity: .3; cursor: not-allowed; }
 
@@ -867,8 +870,8 @@ input[type="checkbox"] {
 }
 .form-control:focus {
   outline: none;
-  border-color: rgba(139,92,246,.3);
-  box-shadow: 0 0 0 3px rgba(139,92,246,.08);
+  border-color: rgba(16,185,129,.3);
+  box-shadow: 0 0 0 3px rgba(16,185,129,.08);
   background: var(--surface-2);
 }
 .form-control::placeholder { color: var(--text-muted); }
@@ -972,7 +975,7 @@ select.form-control option {
   min-height: 100vh; width: 100%;
   display: flex; align-items: center; justify-content: center;
   background:
-    radial-gradient(ellipse at 30% 20%, rgba(139,92,246,.08), transparent 50%),
+    radial-gradient(ellipse at 30% 20%, rgba(16,185,129,.08), transparent 50%),
     radial-gradient(ellipse at 70% 80%, rgba(249,115,22,.06), transparent 50%),
     linear-gradient(160deg, #050a07 0%, #0a1510 40%, #080c0a 100%);
   position: relative;
@@ -982,7 +985,7 @@ select.form-control option {
   position: absolute;
   top: 10%; left: 5%;
   width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(139,92,246,.06), transparent 70%);
+  background: radial-gradient(circle, rgba(16,185,129,.06), transparent 70%);
   border-radius: 50%;
   filter: blur(60px);
   pointer-events: none;
@@ -1003,7 +1006,7 @@ select.form-control option {
   border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
   font-size: 26px; margin: 0 auto 12px;
-  box-shadow: 0 4px 20px rgba(139,92,246,.3);
+  box-shadow: 0 4px 20px rgba(16,185,129,.3);
   color: var(--text-bright);
 }
 .auth-logo h1 { font-size: 22px; font-weight: 800; color: var(--text-bright); }
@@ -1030,7 +1033,7 @@ select.form-control option {
   padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
 }
 .badge-blue   { background: rgba(249,115,22,.1); color: var(--info); }
-.badge-green  { background: rgba(139,92,246,.1); color: var(--accent); }
+.badge-green  { background: rgba(16,185,129,.1); color: var(--accent); }
 .badge-amber  { background: rgba(234,179,8,.1);  color: #eab308; }
 .badge-red    { background: rgba(239,68,68,.1);   color: #ef4444; }
 
@@ -1070,23 +1073,23 @@ select.form-control option {
    PAGE VARIANTS (dark versions)
    ========================================================= */
 .staff-page::before {
-  background: radial-gradient(circle, rgba(139,92,246,.3), transparent);
+  background: radial-gradient(circle, rgba(16,185,129,.3), transparent);
 }
 .staff-page::after {
   background: radial-gradient(circle, rgba(249,115,22,.2), transparent);
 }
 .staff-card-header {
-  background: linear-gradient(135deg, var(--surface-2) 0%, rgba(139,92,246,.06) 55%, rgba(249,115,22,.04) 100%);
+  background: linear-gradient(135deg, var(--surface-2) 0%, rgba(16,185,129,.06) 55%, rgba(249,115,22,.04) 100%);
 }
 
 .course-page::before {
-  background: radial-gradient(circle, rgba(139,92,246,.3), transparent);
+  background: radial-gradient(circle, rgba(16,185,129,.3), transparent);
 }
 .course-page::after {
   background: radial-gradient(circle, rgba(251,146,60,.2), transparent);
 }
 .course-card-header {
-  background: linear-gradient(135deg, var(--surface-2) 0%, rgba(139,92,246,.06) 55%, rgba(251,146,60,.04) 100%);
+  background: linear-gradient(135deg, var(--surface-2) 0%, rgba(16,185,129,.06) 55%, rgba(251,146,60,.04) 100%);
 }
 
 /* =========================================================
@@ -1104,7 +1107,7 @@ select.form-control option {
    SELECTION
    ========================================================= */
 ::selection {
-  background: rgba(139,92,246,.3);
+  background: rgba(16,185,129,.3);
   color: var(--text-bright);
 }
 
@@ -1112,7 +1115,7 @@ select.form-control option {
    FOCUS VISIBLE (accessibility)
    ========================================================= */
 :focus-visible {
-  outline: 2px solid rgba(139,92,246,.5);
+  outline: 2px solid rgba(16,185,129,.5);
   outline-offset: 2px;
 }
 
@@ -1120,8 +1123,8 @@ select.form-control option {
    ANIMATIONS
    ========================================================= */
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(139,92,246,.15); }
-  50% { box-shadow: 0 0 20px 4px rgba(139,92,246,.1); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,.15); }
+  50% { box-shadow: 0 0 20px 4px rgba(16,185,129,.1); }
 }
 
 @keyframes countUp {
